@@ -1,0 +1,8 @@
+# Generated files
+build/
+
+# Yarn & node.js dependencies
+package.json
+node_modules/
+.pnp.*
+.yarn/*

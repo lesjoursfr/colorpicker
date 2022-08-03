@@ -1,16 +1,22 @@
-*~
+# Generated files
+build/
+
+# Yarn & node.js dependencies
+node_modules/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Yarn lockfile
+yarn.lock
+
+# OS X
 .DS_Store
-.DS_Store*
-ehthumbs.db
-Thumbs.db
-*.log
-/node_modules/
-/bower_components/
-/nbproject/
-/gh-pages/
-.idea
-/yarn.lock
-gulpfile.js_*
-/build
-/dist
-/*.html
+._*
+.Spotlight-V100
+.Trashes
+.~lock.*
