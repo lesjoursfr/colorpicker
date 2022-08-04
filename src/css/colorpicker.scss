@@ -5,333 +5,354 @@ $base-margin: 6px !default;
 $columns: 6 !default; // this affects the number of swatches per row and the width of the color picker, saturation, etc.
 $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 
-@mixin bgCheckerBox($size: 10px) {
-  background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0),
-  linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0),
-  rgb(255, 255, 255);
-  background-size: $size $size;
-  background-position: 0 0, $size/2 $size/2;
+@mixin bg-checker-box($size: 10px) {
+	background: linear-gradient(
+			45deg,
+			rgba(0, 0, 0, 0.1) 25%,
+			rgba(0, 0, 0, 0) 25%,
+			rgba(0, 0, 0, 0) 75%,
+			rgba(0, 0, 0, 0.1) 75%,
+			rgba(0, 0, 0, 0.1) 0
+		),
+		linear-gradient(
+			45deg,
+			rgba(0, 0, 0, 0.1) 25%,
+			rgba(0, 0, 0, 0) 25%,
+			rgba(0, 0, 0, 0) 75%,
+			rgba(0, 0, 0, 0.1) 75%,
+			rgba(0, 0, 0, 0.1) 0
+		),
+		rgb(255, 255, 255);
+	background-position: 0 0, $size/2 $size/2;
+	background-size: $size $size;
 }
 
-@mixin bgSaturation() {
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
-  -moz-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 1))),
-  -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(100%, rgba(255, 255, 255, 0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
-  -webkit-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
-  -o-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
-  -ms-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); /* IE10+ */
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
-  linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); /* W3C */
+@mixin bg-saturation() {
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%),
+		linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
-@mixin bgHueHorizontal() {
-  background: -moz-linear-gradient(right, rgb(255, 0, 0) 0%, rgb(255, 128, 0) 8%, rgb(255, 255, 0) 17%, rgb(128, 255, 0) 25%, rgb(0, 255, 0) 33%, rgb(0, 255, 128) 42%, rgb(0, 255, 255) 50%, rgb(0, 128, 255) 58%, rgb(0, 0, 255) 67%, rgb(128, 0, 255) 75%, rgb(255, 0, 255) 83%, rgb(255, 0, 128) 92%, rgb(255, 0, 0) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, right top, left top, color-stop(0%, rgb(255, 0, 0)), color-stop(8%, rgb(255, 128, 0)), color-stop(17%, rgb(255, 255, 0)), color-stop(25%, rgb(128, 255, 0)), color-stop(33%, rgb(0, 255, 0)), color-stop(42%, rgb(0, 255, 128)), color-stop(50%, rgb(0, 255, 255)), color-stop(58%, rgb(0, 128, 255)), color-stop(67%, rgb(0, 0, 255)), color-stop(75%, rgb(128, 0, 255)), color-stop(83%, rgb(255, 0, 255)), color-stop(92%, rgb(255, 0, 128)), color-stop(100%, rgb(255, 0, 0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(right, rgb(255, 0, 0) 0%, rgb(255, 128, 0) 8%, rgb(255, 255, 0) 17%, rgb(128, 255, 0) 25%, rgb(0, 255, 0) 33%, rgb(0, 255, 128) 42%, rgb(0, 255, 255) 50%, rgb(0, 128, 255) 58%, rgb(0, 0, 255) 67%, rgb(128, 0, 255) 75%, rgb(255, 0, 255) 83%, rgb(255, 0, 128) 92%, rgb(255, 0, 0) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(right, rgb(255, 0, 0) 0%, rgb(255, 128, 0) 8%, rgb(255, 255, 0) 17%, rgb(128, 255, 0) 25%, rgb(0, 255, 0) 33%, rgb(0, 255, 128) 42%, rgb(0, 255, 255) 50%, rgb(0, 128, 255) 58%, rgb(0, 0, 255) 67%, rgb(128, 0, 255) 75%, rgb(255, 0, 255) 83%, rgb(255, 0, 128) 92%, rgb(255, 0, 0) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(right, rgb(255, 0, 0) 0%, rgb(255, 128, 0) 8%, rgb(255, 255, 0) 17%, rgb(128, 255, 0) 25%, rgb(0, 255, 0) 33%, rgb(0, 255, 128) 42%, rgb(0, 255, 255) 50%, rgb(0, 128, 255) 58%, rgb(0, 0, 255) 67%, rgb(128, 0, 255) 75%, rgb(255, 0, 255) 83%, rgb(255, 0, 128) 92%, rgb(255, 0, 0) 100%); /* IE10+ */
-  background: linear-gradient(to left, rgb(255, 0, 0) 0%, rgb(255, 128, 0) 8%, rgb(255, 255, 0) 17%, rgb(128, 255, 0) 25%, rgb(0, 255, 0) 33%, rgb(0, 255, 128) 42%, rgb(0, 255, 255) 50%, rgb(0, 128, 255) 58%, rgb(0, 0, 255) 67%, rgb(128, 0, 255) 75%, rgb(255, 0, 255) 83%, rgb(255, 0, 128) 92%, rgb(255, 0, 0) 100%); /* W3C */
-
+@mixin bg-hue-horizontal() {
+	background: linear-gradient(
+		to left,
+		rgb(255, 0, 0) 0%,
+		rgb(255, 128, 0) 8%,
+		rgb(255, 255, 0) 17%,
+		rgb(128, 255, 0) 25%,
+		rgb(0, 255, 0) 33%,
+		rgb(0, 255, 128) 42%,
+		rgb(0, 255, 255) 50%,
+		rgb(0, 128, 255) 58%,
+		rgb(0, 0, 255) 67%,
+		rgb(128, 0, 255) 75%,
+		rgb(255, 0, 255) 83%,
+		rgb(255, 0, 128) 92%,
+		rgb(255, 0, 0) 100%
+	);
 }
 
-@mixin bgHueVertical() {
-  background: -moz-linear-gradient(bottom, rgba(255, 0, 0, 1) 0%, rgba(255, 128, 0, 1) 8%, rgba(255, 255, 0, 1) 17%, rgba(128, 255, 0, 1) 25%, rgba(0, 255, 0, 1) 33%, rgba(0, 255, 128, 1) 42%, rgba(0, 255, 255, 1) 50%, rgba(0, 128, 255, 1) 58%, rgba(0, 0, 255, 1) 67%, rgba(128, 0, 255, 1) 75%, rgba(255, 0, 255, 1) 83%, rgba(255, 0, 128, 1) 92%, rgba(255, 0, 0, 1) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0%, rgba(255, 0, 0, 1)), color-stop(8%, rgba(255, 128, 0, 1)), color-stop(17%, rgba(255, 255, 0, 1)), color-stop(25%, rgba(128, 255, 0, 1)), color-stop(33%, rgba(0, 255, 0, 1)), color-stop(42%, rgba(0, 255, 128, 1)), color-stop(50%, rgba(0, 255, 255, 1)), color-stop(58%, rgba(0, 128, 255, 1)), color-stop(67%, rgba(0, 0, 255, 1)), color-stop(75%, rgba(128, 0, 255, 1)), color-stop(83%, rgba(255, 0, 255, 1)), color-stop(92%, rgba(255, 0, 128, 1)), color-stop(100%, rgba(255, 0, 0, 1))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(bottom, rgba(255, 0, 0, 1) 0%, rgba(255, 128, 0, 1) 8%, rgba(255, 255, 0, 1) 17%, rgba(128, 255, 0, 1) 25%, rgba(0, 255, 0, 1) 33%, rgba(0, 255, 128, 1) 42%, rgba(0, 255, 255, 1) 50%, rgba(0, 128, 255, 1) 58%, rgba(0, 0, 255, 1) 67%, rgba(128, 0, 255, 1) 75%, rgba(255, 0, 255, 1) 83%, rgba(255, 0, 128, 1) 92%, rgba(255, 0, 0, 1) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(bottom, rgba(255, 0, 0, 1) 0%, rgba(255, 128, 0, 1) 8%, rgba(255, 255, 0, 1) 17%, rgba(128, 255, 0, 1) 25%, rgba(0, 255, 0, 1) 33%, rgba(0, 255, 128, 1) 42%, rgba(0, 255, 255, 1) 50%, rgba(0, 128, 255, 1) 58%, rgba(0, 0, 255, 1) 67%, rgba(128, 0, 255, 1) 75%, rgba(255, 0, 255, 1) 83%, rgba(255, 0, 128, 1) 92%, rgba(255, 0, 0, 1) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(bottom, rgba(255, 0, 0, 1) 0%, rgba(255, 128, 0, 1) 8%, rgba(255, 255, 0, 1) 17%, rgba(128, 255, 0, 1) 25%, rgba(0, 255, 0, 1) 33%, rgba(0, 255, 128, 1) 42%, rgba(0, 255, 255, 1) 50%, rgba(0, 128, 255, 1) 58%, rgba(0, 0, 255, 1) 67%, rgba(128, 0, 255, 1) 75%, rgba(255, 0, 255, 1) 83%, rgba(255, 0, 128, 1) 92%, rgba(255, 0, 0, 1) 100%); /* IE10+ */
-  background: linear-gradient(to top, rgba(255, 0, 0, 1) 0%, rgba(255, 128, 0, 1) 8%, rgba(255, 255, 0, 1) 17%, rgba(128, 255, 0, 1) 25%, rgba(0, 255, 0, 1) 33%, rgba(0, 255, 128, 1) 42%, rgba(0, 255, 255, 1) 50%, rgba(0, 128, 255, 1) 58%, rgba(0, 0, 255, 1) 67%, rgba(128, 0, 255, 1) 75%, rgba(255, 0, 255, 1) 83%, rgba(255, 0, 128, 1) 92%, rgba(255, 0, 0, 1) 100%); /* W3C */
+@mixin bg-hue-vertical() {
+	background: linear-gradient(
+		to top,
+		rgba(255, 0, 0, 1) 0%,
+		rgba(255, 128, 0, 1) 8%,
+		rgba(255, 255, 0, 1) 17%,
+		rgba(128, 255, 0, 1) 25%,
+		rgba(0, 255, 0, 1) 33%,
+		rgba(0, 255, 128, 1) 42%,
+		rgba(0, 255, 255, 1) 50%,
+		rgba(0, 128, 255, 1) 58%,
+		rgba(0, 0, 255, 1) 67%,
+		rgba(128, 0, 255, 1) 75%,
+		rgba(255, 0, 255, 1) 83%,
+		rgba(255, 0, 128, 1) 92%,
+		rgba(255, 0, 0, 1) 100%
+	);
 }
 
 .colorpicker {
-  position: relative;
-  display: none;
-  font-size: inherit;
-  color: inherit;
-  text-align: left;
-  list-style: none;
-  background-color: #ffffff;
-  background-clip: padding-box;
-  border: 1px solid $outline-color;
-  //box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  padding: .75rem .75rem;
-  width: ($bar-size-large + $base-margin + $bar-size-short);
-  border-radius: 4px;
-  box-sizing: content-box;
+	background-clip: padding-box;
+	background-color: #fff;
+	border: 1px solid $outline-color;
+	border-radius: 4px;
+	box-sizing: content-box;
+	color: inherit;
+	display: none;
+	font-size: inherit;
+	list-style: none;
+	padding: 0.75rem;
+	position: relative;
+	text-align: left;
+	width: ($bar-size-large + $base-margin + $bar-size-short);
 }
 
 .colorpicker.colorpicker-disabled,
 .colorpicker.colorpicker-disabled * {
-  cursor: default !important;
+	cursor: default !important;
 }
 
 .colorpicker div {
-  position: relative;
+	position: relative;
 }
 
 .colorpicker-popup {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  float: left;
-  margin-top: 1px;
-  z-index: 1060;
+	float: left;
+	left: 0;
+	margin-top: 1px;
+	position: absolute;
+	top: 100%;
+	z-index: 1060;
 }
 
 .colorpicker-popup.colorpicker-bs-popover-content {
-  position: relative;
-  top: auto;
-  left: auto;
-  float: none;
-  margin: 0;
-  z-index: initial;
-  border: none;
-  padding: 0.25rem 0; // popover padding correction
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	float: none;
+	left: auto;
+	margin: 0;
+	padding: 0.25rem 0; // popover padding correction
+	position: relative;
+	top: auto;
+	z-index: initial;
 }
 
-.colorpicker:before,
-.colorpicker:after {
-  content: "";
-  display: table;
-  clear: both;
-  line-height: 0;
+.colorpicker::before,
+.colorpicker::after {
+	clear: both;
+	content: "";
+	display: table;
+	line-height: 0;
 }
 
 .colorpicker-clear {
-  clear: both;
-  display: block;
+	clear: both;
+	display: block;
 }
 
-.colorpicker:before {
-  content: '';
-  display: inline-block;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #ccc;
-  border-bottom-color: $outline-color;
-  position: absolute;
-  top: -7px;
-  left: auto;
-  right: 6px;
+.colorpicker::before {
+	border-bottom: 7px solid #ccc;
+	border-bottom-color: $outline-color;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	content: "";
+	display: inline-block;
+	left: auto;
+	position: absolute;
+	right: 6px;
+	top: -7px;
 }
 
-.colorpicker:after {
-  content: '';
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #ffffff;
-  position: absolute;
-  top: -6px;
-  left: auto;
-  right: 7px;
+.colorpicker::after {
+	border-bottom: 6px solid #fff;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	content: "";
+	display: inline-block;
+	left: auto;
+	position: absolute;
+	right: 7px;
+	top: -6px;
 }
 
 .colorpicker.colorpicker-with-alpha {
-  width: ($bar-size-large + (($base-margin + $bar-size-short) * 2));
+	width: ($bar-size-large + (($base-margin + $bar-size-short) * 2));
 }
 
 .colorpicker.colorpicker-with-alpha .colorpicker-alpha {
-  display: block;
+	display: block;
 }
 
 .colorpicker-saturation {
-  position: relative;
-  width: $bar-size-large;
-  height: $bar-size-large;
-  @include bgSaturation();
-  cursor: crosshair;
-  float: left;
-  box-shadow: $box-shadow-outline;
-  margin-bottom: $base-margin;
+	@include bg-saturation();
+	box-shadow: $box-shadow-outline;
+	cursor: crosshair;
+	float: left;
+	height: $bar-size-large;
+	margin-bottom: $base-margin;
+	position: relative;
+	width: $bar-size-large;
 
-  .colorpicker-guide {
-    display: block;
-    height: 6px;
-    width: 6px;
-    border-radius: 6px;
-    border: 1px solid #000;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: -3px 0 0 -3px;
-  }
+	.colorpicker-guide {
+		border: 1px solid #000;
+		border-radius: 6px;
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+		display: block;
+		height: 6px;
+		left: 0;
+		margin: -3px 0 0 -3px;
+		position: absolute;
+		top: 0;
+		width: 6px;
+	}
 }
 
 .colorpicker-hue,
 .colorpicker-alpha {
-  position: relative;
-  width: $bar-size-short;
-  height: $bar-size-large;
-  float: left;
-  cursor: row-resize;
-  margin-left: $base-margin;
-  margin-bottom: $base-margin;
+	cursor: row-resize;
+	float: left;
+	height: $bar-size-large;
+	margin-bottom: $base-margin;
+	margin-left: $base-margin;
+	position: relative;
+	width: $bar-size-short;
 }
 
 .colorpicker-alpha-color {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 .colorpicker-hue,
 .colorpicker-alpha-color {
-  box-shadow: $box-shadow-outline;
+	box-shadow: $box-shadow-outline;
 }
 
 .colorpicker-hue .colorpicker-guide,
 .colorpicker-alpha .colorpicker-guide {
-  display: block;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin-left: -2px;
-  margin-top: -2px;
-  right: -2px;
-  z-index: 1;
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px solid rgba(0, 0, 0, 0.4);
+	display: block;
+	height: 4px;
+	left: 0;
+	margin-left: -2px;
+	margin-top: -2px;
+	position: absolute;
+	right: -2px;
+	top: 0;
+	z-index: 1;
 }
 
 .colorpicker-hue {
-  @include bgHueVertical();
+	@include bg-hue-vertical();
 }
 
 .colorpicker-alpha {
-  @include bgCheckerBox();
-  display: none;
+	@include bg-checker-box();
+	display: none;
 }
 
 .colorpicker-bar {
-  min-height: $bar-size-short;
-  margin: $base-margin 0 0 0;
-  clear: both;
-  text-align: center;
-  font-size: 10px;
-  line-height: normal;
-  max-width: 100%;
-  box-shadow: $box-shadow-outline;
+	box-shadow: $box-shadow-outline;
+	clear: both;
+	font-size: 10px;
+	line-height: normal;
+	margin: $base-margin 0 0 0;
+	max-width: 100%;
+	min-height: $bar-size-short;
+	text-align: center;
 
-  &:before {
-    content: "";
-    display: table;
-    clear: both;
-  }
+	&::before {
+		clear: both;
+		content: "";
+		display: table;
+	}
 }
 
 .colorpicker-bar.colorpicker-bar-horizontal {
-  height: $bar-size-large;
-  width: $bar-size-short;
-  margin: 0 0 $base-margin 0;
-  float: left;
+	float: left;
+	height: $bar-size-large;
+	margin: 0 0 $base-margin 0;
+	width: $bar-size-short;
 }
 
 .colorpicker-input-addon {
-  position: relative;
+	position: relative;
 }
 
 .colorpicker-input-addon i {
-  display: inline-block;
-  cursor: pointer;
-  vertical-align: text-top;
-  height: 16px;
-  width: 16px;
-  position: relative;
+	cursor: pointer;
+	display: inline-block;
+	height: 16px;
+	position: relative;
+	vertical-align: text-top;
+	width: 16px;
 }
 
-.colorpicker-input-addon:before {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  vertical-align: text-top;
-  @include bgCheckerBox();
+.colorpicker-input-addon::before {
+	@include bg-checker-box();
+	content: "";
+	display: inline-block;
+	height: 16px;
+	position: absolute;
+	vertical-align: text-top;
+	width: 16px;
 }
 
 .colorpicker.colorpicker-inline {
-  position: relative;
-  display: inline-block;
-  float: none;
-  z-index: auto;
-  vertical-align: text-bottom;
+	display: inline-block;
+	float: none;
+	position: relative;
+	vertical-align: text-bottom;
+	z-index: auto;
 }
 
 .colorpicker.colorpicker-horizontal {
-  width: $bar-size-large;
-  height: auto;
+	height: auto;
+	width: $bar-size-large;
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-bar {
-  width: $bar-size-large;
+	width: $bar-size-large;
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-saturation {
-  float: none;
-  margin-bottom: 0;
+	float: none;
+	margin-bottom: 0;
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-hue,
 .colorpicker.colorpicker-horizontal .colorpicker-alpha {
-  float: none;
-  width: $bar-size-large;
-  height: $bar-size-short;
-  cursor: col-resize;
-  margin-left: 0;
-  margin-top: $base-margin;
-  margin-bottom: 0;
+	cursor: col-resize;
+	float: none;
+	height: $bar-size-short;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-top: $base-margin;
+	width: $bar-size-large;
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-hue .colorpicker-guide,
 .colorpicker.colorpicker-horizontal .colorpicker-alpha .colorpicker-guide {
-  position: absolute;
-  display: block;
-  bottom: -2px;
-  left: 0;
-  right: auto;
-  height: auto;
-  width: 4px;
+	bottom: -2px;
+	display: block;
+	height: auto;
+	left: 0;
+	position: absolute;
+	right: auto;
+	width: 4px;
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-hue {
-  @include bgHueHorizontal();
+	@include bg-hue-horizontal();
 }
 
 .colorpicker.colorpicker-horizontal .colorpicker-alpha {
-  @include bgCheckerBox();
+	@include bg-checker-box();
 }
 
-.colorpicker-inline:before,
-.colorpicker-no-arrow:before,
-.colorpicker-popup.colorpicker-bs-popover-content:before {
-  content: none;
-  display: none;
+.colorpicker-inline::before,
+.colorpicker-no-arrow::before,
+.colorpicker-popup.colorpicker-bs-popover-content::before {
+	content: none;
+	display: none;
 }
 
-.colorpicker-inline:after,
-.colorpicker-no-arrow:after,
-.colorpicker-popup.colorpicker-bs-popover-content:after {
-  content: none;
-  display: none;
+.colorpicker-inline::after,
+.colorpicker-no-arrow::after,
+.colorpicker-popup.colorpicker-bs-popover-content::after {
+	content: none;
+	display: none;
 }
-
 
 .colorpicker-alpha,
 .colorpicker-saturation,
 .colorpicker-hue {
-  user-select: none;
+	user-select: none;
 }
 
 .colorpicker,
@@ -339,9 +360,9 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 .colorpicker-saturation,
 .colorpicker-hue,
 .colorpicker-bar {
-  &.colorpicker-visible {
-    display: block;
-  }
+	&.colorpicker-visible {
+		display: block;
+	}
 }
 
 .colorpicker,
@@ -349,120 +370,120 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 .colorpicker-saturation,
 .colorpicker-hue,
 .colorpicker-bar {
-  &.colorpicker-hidden {
-    display: none;
-  }
+	&.colorpicker-hidden {
+		display: none;
+	}
 }
 
 .colorpicker-inline.colorpicker-visible {
-  display: inline-block;
+	display: inline-block;
 }
 
-.colorpicker.colorpicker-disabled:after {
-  border: none;
-  content: '';
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: rgba(233, 236, 239, 0.33);
-  top: 0;
-  left: 0;
-  right: auto;
-  z-index: 2;
-  position: absolute;
+.colorpicker.colorpicker-disabled::after {
+	background: rgba(233, 236, 239, 0.33);
+	border: 0;
+	content: "";
+	display: block;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	right: auto;
+	top: 0;
+	width: 100%;
+	z-index: 2;
 }
 
 .colorpicker.colorpicker-disabled .colorpicker-guide {
-  display: none;
+	display: none;
 }
 
 /** EXTENSIONS **/
 
 .colorpicker-preview {
-  @include bgCheckerBox();
+	@include bg-checker-box();
 }
 
 .colorpicker-preview > div {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 .colorpicker-bar.colorpicker-swatches {
-  box-shadow: none;
-  height: auto;
+	box-shadow: none;
+	height: auto;
 }
 
 .colorpicker-swatches--inner {
-  clear: both;
-  margin-top: -$base-margin;
+	clear: both;
+	margin-top: -$base-margin;
 }
 
 .colorpicker-swatch {
-  position: relative;
-  cursor: pointer;
-  float: left;
-  height: $bar-size-short;
-  width: $bar-size-short;
-  margin-right: $base-margin;
-  margin-top: $base-margin;
-  margin-left: 0;
-  display: block;
-  box-shadow: $box-shadow-outline;
-  @include bgCheckerBox();
+	@include bg-checker-box();
+	box-shadow: $box-shadow-outline;
+	cursor: pointer;
+	display: block;
+	float: left;
+	height: $bar-size-short;
+	margin-left: 0;
+	margin-right: $base-margin;
+	margin-top: $base-margin;
+	position: relative;
+	width: $bar-size-short;
 }
 
 .colorpicker-swatch--inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 // saturation + hue vertical (clear margin-right on nth column + 1)
-.colorpicker-swatch:nth-of-type(#{$columns + 1}n+0) {
-  margin-right: 0;
+.colorpicker-swatch:nth-of-type(#{$columns + 1}n + 0) {
+	margin-right: 0;
 }
 
 // saturation + hue + alpha vertical (clear margin-right on nth column + 2)
 .colorpicker-with-alpha {
-  .colorpicker-swatch:nth-of-type(#{$columns + 1}n+0) {
-    margin-right: $base-margin;
-  }
+	.colorpicker-swatch:nth-of-type(#{$columns + 1}n + 0) {
+		margin-right: $base-margin;
+	}
 
-  .colorpicker-swatch:nth-of-type(#{$columns + 2}n+0) {
-    margin-right: 0;
-  }
+	.colorpicker-swatch:nth-of-type(#{$columns + 2}n + 0) {
+		margin-right: 0;
+	}
 }
 
 // horizontal mode (clear margin-right on nth column)
 .colorpicker-horizontal {
-  .colorpicker-swatch:nth-of-type(#{$columns}n+0) {
-    margin-right: 0;
-  }
+	.colorpicker-swatch:nth-of-type(#{$columns}n + 0) {
+		margin-right: 0;
+	}
 
-  .colorpicker-swatch:nth-of-type(#{$columns + 1}n+0) {
-    margin-right: $base-margin;
-  }
+	.colorpicker-swatch:nth-of-type(#{$columns + 1}n + 0) {
+		margin-right: $base-margin;
+	}
 
-  .colorpicker-swatch:nth-of-type(#{$columns + 2}n+0) {
-    margin-right: $base-margin;
-  }
+	.colorpicker-swatch:nth-of-type(#{$columns + 2}n + 0) {
+		margin-right: $base-margin;
+	}
 }
 
-.colorpicker-swatch:last-of-type:after {
-  content: "";
-  display: table;
-  clear: both;
+.colorpicker-swatch:last-of-type::after {
+	clear: both;
+	content: "";
+	display: table;
 }
 
 // RTL writing mode support
-*[dir='rtl'] .colorpicker-element input,
-.colorpicker-element[dir='rtl'] input,
-.colorpicker-element input[dir='rtl'] {
-  direction: ltr;
-  text-align: right;
+*[dir="rtl"] .colorpicker-element input,
+.colorpicker-element[dir="rtl"] input,
+.colorpicker-element input[dir="rtl"] {
+	direction: ltr;
+	text-align: right;
 }
