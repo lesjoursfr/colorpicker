@@ -1,9 +1,6 @@
-'use strict';
+import { Extension } from "../core/index.js";
 
-import Extension from 'Extension';
-import $ from 'jquery';
-
-let defaults = {
+const defaults = {
   /**
    * Key-value pairs defining a color alias and its CSS color representation.
    *
@@ -34,15 +31,14 @@ let defaults = {
    * @type {boolean}
    * @default true
    */
-  namesAsValues: true
+  namesAsValues: true,
 };
 
 /**
  * Palette extension
  * @ignore
  */
-class Palette extends Extension {
-
+export class Palette extends Extension {
   /**
    * @returns {Object|Array}
    */
@@ -51,9 +47,9 @@ class Palette extends Extension {
   }
 
   constructor(colorpicker, options = {}) {
-    super(colorpicker, $.extend(true, {}, defaults, options));
+    super(colorpicker, Object.assign({}, structuredClone(defaults), structuredClone(options)));
 
-    if ((!Array.isArray(this.options.colors)) && (typeof this.options.colors !== 'object')) {
+    if (!Array.isArray(this.options.colors) && typeof this.options.colors !== "object") {
       this.options.colors = null;
     }
   }
@@ -70,7 +66,7 @@ class Palette extends Extension {
       return this.options.colors.length;
     }
 
-    if (typeof this.options.colors === 'object') {
+    if (typeof this.options.colors === "object") {
       return Object.keys(this.options.colors).length;
     }
 
@@ -96,7 +92,7 @@ class Palette extends Extension {
       return false;
     }
 
-    if (typeof this.options.colors !== 'object') {
+    if (typeof this.options.colors !== "object") {
       return false;
     }
 
@@ -104,7 +100,7 @@ class Palette extends Extension {
     if (!this.options.namesAsValues || realColor) {
       return this.getValue(color, false);
     }
-    return this.getName(color, this.getName('#' + color));
+    return this.getName(color, this.getName("#" + color));
   }
 
   /**
@@ -115,11 +111,11 @@ class Palette extends Extension {
    * @returns {*}
    */
   getName(value, defaultValue = false) {
-    if (!(typeof value === 'string') || !this.options.colors) {
+    if (!(typeof value === "string") || !this.options.colors) {
       return defaultValue;
     }
-    for (let name in this.options.colors) {
-      if (!this.options.colors.hasOwnProperty(name)) {
+    for (const name in this.options.colors) {
+      if (!Object.hasOwn(this.options.colors, name)) {
         continue;
       }
       if (this.options.colors[name].toLowerCase() === value.toLowerCase()) {
@@ -137,14 +133,12 @@ class Palette extends Extension {
    * @returns {*}
    */
   getValue(name, defaultValue = false) {
-    if (!(typeof name === 'string') || !this.options.colors) {
+    if (!(typeof name === "string") || !this.options.colors) {
       return defaultValue;
     }
-    if (this.options.colors.hasOwnProperty(name)) {
+    if (Object.hasOwn(this.options.colors, name)) {
       return this.options.colors[name];
     }
     return defaultValue;
   }
 }
-
-export default Palette;

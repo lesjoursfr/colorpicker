@@ -1,18 +1,37 @@
-'use strict';
+import popper from "@popperjs/core";
+import {
+  hasAttribute,
+  getAttribute,
+  setAttribute,
+  hasClass,
+  addClass,
+  removeClass,
+  on,
+  off,
+  createFromTemplate,
+} from "../core/index.js";
+import _defaults from "../options.js";
 
-import $ from 'jquery';
-import _defaults from './options';
+const defaults = {
+  popoverTemplate: `<div class="colorpicker-popover"></div>`,
+};
 
 /**
  * Handles everything related to the UI of the colorpicker popup: show, hide, position,...
  * @ignore
  */
-class PopupHandler {
+export class PopupHandler {
   /**
    * @param {Colorpicker} colorpicker
    * @param {Window} root
    */
   constructor(colorpicker, root) {
+    this.toggle = this.toggle.bind(this);
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
+    this.reposition = this.reposition.bind(this);
+    this.onClickingInside = this.onClickingInside.bind(this);
+
     /**
      * @type {Window}
      */
@@ -22,13 +41,17 @@ class PopupHandler {
      */
     this.colorpicker = colorpicker;
     /**
-     * @type {jQuery}
+     * @type {HTMLElement}
      */
     this.popoverTarget = null;
     /**
-     * @type {jQuery}
+     * @type {HTMLElement}
      */
     this.popoverTip = null;
+    /**
+     * @type {popper.Instance}
+     */
+    this.popperInstance = null;
 
     /**
      * If true, the latest click was inside the popover
@@ -47,7 +70,7 @@ class PopupHandler {
 
   /**
    * @private
-   * @returns {jQuery|false}
+   * @returns {HTMLElement|false}
    */
   get input() {
     return this.colorpicker.inputHandler.input;
@@ -63,7 +86,7 @@ class PopupHandler {
 
   /**
    * @private
-   * @returns {jQuery|false}
+   * @returns {HTMLElement|false}
    */
   get addon() {
     return this.colorpicker.addonHandler.addon;
@@ -90,14 +113,14 @@ class PopupHandler {
    * hide the colorpicker popup accordingly. It also adds the proper classes.
    */
   bind() {
-    let cp = this.colorpicker;
+    const cp = this.colorpicker;
 
     if (cp.options.inline) {
-      cp.picker.addClass('colorpicker-inline colorpicker-visible');
+      addClass(cp.picker, ["colorpicker-inline", "colorpicker-visible"]);
       return; // no need to bind show/hide events for inline elements
     }
 
-    cp.picker.addClass('colorpicker-popup colorpicker-hidden');
+    addClass(cp.picker, ["colorpicker-popup", "colorpicker-hidden"]);
 
     // there is no input or addon
     if (!this.hasInput && !this.hasAddon) {
@@ -112,37 +135,24 @@ class PopupHandler {
     // bind addon show/hide events
     if (this.hasAddon) {
       // enable focus on addons
-      if (!this.addon.attr('tabindex')) {
-        this.addon.attr('tabindex', 0);
+      if (!hasAttribute(this.addon, "tabindex")) {
+        setAttribute(this.addon, "tabindex", 0);
       }
 
-      this.addon.on({
-        'mousedown.colorpicker touchstart.colorpicker': $.proxy(this.toggle, this)
-      });
-
-      this.addon.on({
-        'focus.colorpicker': $.proxy(this.show, this)
-      });
-
-      this.addon.on({
-        'focusout.colorpicker': $.proxy(this.hide, this)
-      });
+      on(this.addon, "mousedown.colorpicker touchstart.colorpicker", this.toggle);
+      on(this.addon, "focus.colorpicker", this.show);
+      on(this.addon, "focusout.colorpicker", this.hide);
     }
 
     // bind input show/hide events
     if (this.hasInput && !this.hasAddon) {
-      this.input.on({
-        'mousedown.colorpicker touchstart.colorpicker': $.proxy(this.show, this),
-        'focus.colorpicker': $.proxy(this.show, this)
-      });
-
-      this.input.on({
-        'focusout.colorpicker': $.proxy(this.hide, this)
-      });
+      on(this.input, "mousedown.colorpicker touchstart.colorpicker", this.show);
+      on(this.input, "focus.colorpicker", this.show);
+      on(this.input, "focusout.colorpicker", this.hide);
     }
 
     // reposition popup on window resize
-    $(this.root).on('resize.colorpicker', $.proxy(this.reposition, this));
+    on(this.root, "resize.colorpicker", this.reposition);
   }
 
   /**
@@ -150,34 +160,25 @@ class PopupHandler {
    */
   unbind() {
     if (this.hasInput) {
-      this.input.off({
-        'mousedown.colorpicker touchstart.colorpicker': $.proxy(this.show, this),
-        'focus.colorpicker': $.proxy(this.show, this)
-      });
-      this.input.off({
-        'focusout.colorpicker': $.proxy(this.hide, this)
-      });
+      off(this.input, "mousedown.colorpicker touchstart.colorpicker");
+      off(this.input, "focus.colorpicker");
+      off(this.input, "focusout.colorpicker");
     }
 
     if (this.hasAddon) {
-      this.addon.off({
-        'mousedown.colorpicker touchstart.colorpicker': $.proxy(this.toggle, this)
-      });
-      this.addon.off({
-        'focus.colorpicker': $.proxy(this.show, this)
-      });
-      this.addon.off({
-        'focusout.colorpicker': $.proxy(this.hide, this)
-      });
+      off(this.addon, "mousedown.colorpicker touchstart.colorpicker");
+      off(this.addon, "focus.colorpicker");
+      off(this.addon, "focusout.colorpicker");
     }
 
-    if (this.popoverTarget) {
-      this.popoverTarget.popover('dispose');
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = undefined;
     }
 
-    $(this.root).off('resize.colorpicker', $.proxy(this.reposition, this));
-    $(this.root.document).off('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.hide, this));
-    $(this.root.document).off('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.onClickingInside, this));
+    off(this.root, "resize.colorpicker", this.reposition);
+    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
   }
 
   isClickingInside(e) {
@@ -198,12 +199,7 @@ class PopupHandler {
       return false;
     }
 
-    element = $(element);
-
-    return (
-      element.is(container) ||
-      container.find(element).length > 0
-    );
+    return container.contains(element);
   }
 
   onClickingInside(e) {
@@ -211,36 +207,15 @@ class PopupHandler {
   }
 
   createPopover() {
-    let cp = this.colorpicker;
+    const cp = this.colorpicker;
 
     this.popoverTarget = this.hasAddon ? this.addon : this.input;
 
-    cp.picker.addClass('colorpicker-bs-popover-content');
+    addClass(cp.picker, "colorpicker-popover-content");
 
-    this.popoverTarget.popover(
-      $.extend(
-        true,
-        {},
-        _defaults.popover,
-        cp.options.popover,
-        {trigger: 'manual', content: cp.picker, html: true}
-      )
-    );
-
-    /* Bootstrap 5 added an official method to get the popover instance */
-    /* global bootstrap */
-    const useGetInstance = window.bootstrap &&
-      window.bootstrap.Popover &&
-      window.bootstrap.Popover.getInstance;
-
-    this.popoverTip = useGetInstance ?
-      $(bootstrap.Popover.getInstance(this.popoverTarget[0]).getTipElement()) :
-      $(this.popoverTarget.popover('getTipElement').data('bs.popover').tip);
-
-    this.popoverTip.addClass('colorpicker-bs-popover');
-
-    this.popoverTarget.on('shown.bs.popover', $.proxy(this.fireShow, this));
-    this.popoverTarget.on('hidden.bs.popover', $.proxy(this.fireHide, this));
+    this.popoverTip = createFromTemplate(defaults.popoverTemplate);
+    this.popoverTip.append(cp.picker);
+    this.colorpicker.element.appendChild(this.popoverTip);
   }
 
   /**
@@ -251,7 +226,7 @@ class PopupHandler {
    */
   reposition(e) {
     if (this.popoverTarget && this.isVisible()) {
-      this.popoverTarget.popover('update');
+      this.popperInstance.update();
     }
   }
 
@@ -285,30 +260,33 @@ class PopupHandler {
     this.hidding = false;
     this.clicking = false;
 
-    let cp = this.colorpicker;
+    const cp = this.colorpicker;
 
-    cp.lastEvent.alias = 'show';
+    cp.lastEvent.alias = "show";
     cp.lastEvent.e = e;
 
     // Prevent showing browser native HTML5 colorpicker
-    if (
-      (e && (!this.hasInput || this.input.attr('type') === 'color')) &&
-      (e && e.preventDefault)
-    ) {
+    if ((!this.hasInput || getAttribute(this.input, "type") === "color") && e && e.preventDefault) {
       e.stopPropagation();
       e.preventDefault();
     }
 
     // If it's a popover, add event to the document to hide the picker when clicking outside of it
     if (this.isPopover) {
-      $(this.root).on('resize.colorpicker', $.proxy(this.reposition, this));
+      on(this.root, "resize.colorpicker", this.reposition);
     }
 
     // add visible class before popover is shown
-    cp.picker.addClass('colorpicker-visible').removeClass('colorpicker-hidden');
+    addClass(cp.picker, "colorpicker-visible");
+    removeClass(cp.picker, "colorpicker-hidden");
 
     if (this.popoverTarget) {
-      this.popoverTarget.popover('show');
+      this.popperInstance = popper.createPopper(
+        this.popoverTarget,
+        this.popoverTip,
+        Object.assign({}, structuredClone(_defaults.popover), structuredClone(cp.options.popover))
+      );
+      setTimeout(() => this.fireShow());
     } else {
       this.fireShow();
     }
@@ -320,8 +298,8 @@ class PopupHandler {
 
     if (this.isPopover) {
       // Add event to hide on outside click
-      $(this.root.document).on('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.hide, this));
-      $(this.root.document).on('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.onClickingInside, this));
+      on(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+      on(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
     }
 
     /**
@@ -329,7 +307,7 @@ class PopupHandler {
      *
      * @event Colorpicker#colorpickerShow
      */
-    this.colorpicker.trigger('colorpickerShow');
+    this.colorpicker.trigger("colorpickerShow");
   }
 
   /**
@@ -344,13 +322,14 @@ class PopupHandler {
       return;
     }
 
-    let cp = this.colorpicker, clicking = (this.clicking || this.isClickingInside(e));
+    const cp = this.colorpicker;
+    const clicking = this.clicking || this.isClickingInside(e);
 
     this.hidding = true;
     this.showing = false;
     this.clicking = false;
 
-    cp.lastEvent.alias = 'hide';
+    cp.lastEvent.alias = "hide";
     cp.lastEvent.e = e;
 
     // TODO: fix having to click twice outside when losing focus and last 2 clicks where inside the colorpicker
@@ -361,33 +340,35 @@ class PopupHandler {
       return;
     }
 
-    if (this.popoverTarget) {
-      this.popoverTarget.popover('hide');
-    } else {
-      this.fireHide();
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = undefined;
     }
+
+    this.fireHide();
   }
 
   fireHide() {
     this.hidding = false;
     this.showing = false;
 
-    let cp = this.colorpicker;
+    const cp = this.colorpicker;
 
     // add hidden class after popover is hidden
-    cp.picker.addClass('colorpicker-hidden').removeClass('colorpicker-visible');
+    addClass(cp.picker, "colorpicker-hidden");
+    removeClass(cp.picker, "colorpicker-visible");
 
     // Unbind window and document events, since there is no need to keep them while the popup is hidden
-    $(this.root).off('resize.colorpicker', $.proxy(this.reposition, this));
-    $(this.root.document).off('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.hide, this));
-    $(this.root.document).off('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.onClickingInside, this));
+    off(this.root, "resize.colorpicker", this.reposition);
+    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
 
     /**
      * (Colorpicker) When hide() is called and the widget can be hidden.
      *
      * @event Colorpicker#colorpickerHide
      */
-    cp.trigger('colorpickerHide');
+    cp.trigger("colorpickerHide");
   }
 
   focus() {
@@ -407,8 +388,10 @@ class PopupHandler {
    * @returns {boolean}
    */
   isVisible() {
-    return this.colorpicker.picker.hasClass('colorpicker-visible') &&
-      !this.colorpicker.picker.hasClass('colorpicker-hidden');
+    return (
+      hasClass(this.colorpicker.picker, "colorpicker-visible") &&
+      !hasClass(this.colorpicker.picker, "colorpicker-hidden")
+    );
   }
 
   /**
@@ -418,9 +401,9 @@ class PopupHandler {
    * @returns {boolean}
    */
   isHidden() {
-    return this.colorpicker.picker.hasClass('colorpicker-hidden') &&
-      !this.colorpicker.picker.hasClass('colorpicker-visible');
+    return (
+      hasClass(this.colorpicker.picker, "colorpicker-hidden") &&
+      !hasClass(this.colorpicker.picker, "colorpicker-visible")
+    );
   }
 }
-
-export default PopupHandler;

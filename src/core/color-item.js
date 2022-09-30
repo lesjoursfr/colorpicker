@@ -1,13 +1,13 @@
 /**
  * Color manipulation class, specific for Bootstrap Colorpicker
  */
-import QixColor from 'color';
+import QixColor from "color";
 
 /**
  * HSVA color data class, containing the hue, saturation, value and alpha
  * information.
  */
-class HSVAColor {
+export class HSVAColor {
   /**
    * @param {number|int} h
    * @param {number|int} s
@@ -29,8 +29,7 @@ class HSVAColor {
 /**
  * HSVA color manipulation
  */
-class ColorItem {
-
+export class ColorItem {
   /**
    * Returns the HSVAColor class
    *
@@ -61,7 +60,7 @@ class ColorItem {
       return this._color;
     }
 
-    let result = this._color[fn].apply(this._color, args);
+    const result = this._color[fn].apply(this._color, args);
 
     if (!(result instanceof QixColor)) {
       // return result of the method call
@@ -108,9 +107,9 @@ class ColorItem {
      * @private
      */
     this._original = {
-      color: color,
-      format: format,
-      valid: true
+      color,
+      format,
+      valid: true,
     };
     /**
      * @type {QixColor}
@@ -128,8 +127,7 @@ class ColorItem {
      * @type {*|string}
      * @private
      */
-    this._format = format ? format :
-      (ColorItem.isHex(color) ? 'hex' : this._color.model);
+    this._format = format || (ColorItem.isHex(color) ? "hex" : this._color.model);
   }
 
   /**
@@ -164,10 +162,10 @@ class ColorItem {
     }
 
     if (Array.isArray(color)) {
-      format = 'hsv';
+      format = "hsv";
     }
 
-    if (ColorItem.isHex(color) && (color.length !== 6 && color.length !== 7) && disableHexInputFallback) {
+    if (ColorItem.isHex(color) && color.length !== 6 && color.length !== 7 && disableHexInputFallback) {
       return null;
     }
 
@@ -188,7 +186,7 @@ class ColorItem {
    * @returns {String|*}
    */
   static sanitizeString(str) {
-    if (!(typeof str === 'string' || str instanceof String)) {
+    if (!(typeof str === "string" || str instanceof String)) {
       return str;
     }
 
@@ -196,8 +194,8 @@ class ColorItem {
       return `#${str}`;
     }
 
-    if (str.toLowerCase() === 'transparent') {
-      return '#FFFFFF00';
+    if (str.toLowerCase() === "transparent") {
+      return "#FFFFFF00";
     }
 
     return str;
@@ -214,7 +212,7 @@ class ColorItem {
    * @returns {boolean}
    */
   static isHex(str) {
-    if (!(typeof str === 'string' || str instanceof String)) {
+    if (!(typeof str === "string" || str instanceof String)) {
       return false;
     }
 
@@ -234,26 +232,26 @@ class ColorItem {
    */
   static sanitizeFormat(format) {
     switch (format) {
-      case 'hex':
-      case 'hex3':
-      case 'hex4':
-      case 'hex6':
-      case 'hex8':
-        return 'hex';
-      case 'rgb':
-      case 'rgba':
-      case 'keyword':
-      case 'name':
-        return 'rgb';
-      case 'hsl':
-      case 'hsla':
-      case 'hsv':
-      case 'hsva':
-      case 'hwb': // HWB this is supported by Qix Color, but not by browsers
-      case 'hwba':
-        return 'hsl';
-      default :
-        return '';
+      case "hex":
+      case "hex3":
+      case "hex4":
+      case "hex6":
+      case "hex8":
+        return "hex";
+      case "rgb":
+      case "rgba":
+      case "keyword":
+      case "name":
+        return "rgb";
+      case "hsl":
+      case "hsla":
+      case "hsv":
+      case "hsva":
+      case "hwb": // HWB this is supported by Qix Color, but not by browsers
+      case "hwba":
+        return "hsl";
+      default:
+        return "";
     }
   }
 
@@ -299,7 +297,7 @@ class ColorItem {
    * @returns {number}
    */
   get alpha() {
-    let a = this._color.alpha();
+    const a = this._color.alpha();
 
     return isNaN(a) ? 1 : a;
   }
@@ -329,7 +327,7 @@ class ColorItem {
    * @param {number} h Ratio from 1.0 to 0.0
    */
   setHueRatio(h) {
-    this.hue = ((1 - h) * 360);
+    this.hue = (1 - h) * 360;
   }
 
   /**
@@ -348,7 +346,7 @@ class ColorItem {
    * @param {number} s Ratio from 0.0 to 1.0
    */
   setSaturationRatio(s) {
-    this.saturation = (s * 100);
+    this.saturation = s * 100;
   }
 
   /**
@@ -367,7 +365,7 @@ class ColorItem {
    * @param {number} v Ratio from 1.0 to 0.0
    */
   setValueRatio(v) {
-    this.value = ((1 - v) * 100);
+    this.value = (1 - v) * 100;
   }
 
   /**
@@ -423,7 +421,7 @@ class ColorItem {
    * @returns {boolean}
    */
   hasTransparency() {
-    return this.hasAlpha() && (this.alpha < 1);
+    return this.hasAlpha() && this.alpha < 1;
   }
 
   /**
@@ -461,12 +459,7 @@ class ColorItem {
    * @returns {HSVAColor}
    */
   toHsvaRatio() {
-    return new HSVAColor(
-      this.hue / 360,
-      this.saturation / 100,
-      this.value / 100,
-      this.alpha
-    );
+    return new HSVAColor(this.hue / 360, this.saturation / 100, this.value / 100, this.alpha);
   }
 
   /**
@@ -487,7 +480,7 @@ class ColorItem {
    * @returns {String}
    */
   string(format = null) {
-    format = ColorItem.sanitizeFormat(format ? format : this.format);
+    format = ColorItem.sanitizeFormat(format || this.format);
 
     if (!format) {
       return this._color.round().string();
@@ -497,7 +490,7 @@ class ColorItem {
       throw new Error(`Unsupported color format: '${format}'`);
     }
 
-    let str = this._color[format]();
+    const str = this._color[format]();
 
     return str.round ? str.round().string() : str;
   }
@@ -512,7 +505,7 @@ class ColorItem {
    * @returns {boolean}
    */
   equals(color) {
-    color = (color instanceof ColorItem) ? color : new ColorItem(color);
+    color = color instanceof ColorItem ? color : new ColorItem(color);
 
     if (!color.isValid() || !this.isValid()) {
       return false;
@@ -560,7 +553,7 @@ class ColorItem {
    * @returns {String}
    */
   toRgbString() {
-    return this.string('rgb');
+    return this.string("rgb");
   }
 
   /**
@@ -569,7 +562,7 @@ class ColorItem {
    * @returns {String}
    */
   toHexString() {
-    return this.string('hex');
+    return this.string("hex");
   }
 
   /**
@@ -578,7 +571,7 @@ class ColorItem {
    * @returns {String}
    */
   toHslString() {
-    return this.string('hsl');
+    return this.string("hsl");
   }
 
   /**
@@ -615,20 +608,22 @@ class ColorItem {
 
     if (Array.isArray(formula)) {
       hues = formula;
-    } else if (!ColorItem.colorFormulas.hasOwnProperty(formula)) {
+    } else if (!Object.hasOwn(ColorItem.colorFormulas, formula)) {
       throw new Error(`No color formula found with the name '${formula}'.`);
     } else {
       hues = ColorItem.colorFormulas[formula];
     }
 
-    let colors = [], mainColor = this._color, format = this.format;
+    const colors = [];
+    const mainColor = this._color;
+    const format = this.format;
 
     hues.forEach(function (hue) {
-      let levels = [
-        hue ? ((mainColor.hue() + hue) % 360) : mainColor.hue(),
+      const levels = [
+        hue ? (mainColor.hue() + hue) % 360 : mainColor.hue(),
         mainColor.saturationv(),
         mainColor.value(),
-        mainColor.alpha()
+        mainColor.alpha(),
       ];
 
       colors.push(new ColorItem(levels, format));
@@ -648,12 +643,5 @@ ColorItem.colorFormulas = {
   complementary: [180],
   triad: [0, 120, 240],
   tetrad: [0, 90, 180, 270],
-  splitcomplement: [0, 72, 216]
-};
-
-export default ColorItem;
-
-export {
-  HSVAColor,
-  ColorItem
+  splitcomplement: [0, 72, 216],
 };

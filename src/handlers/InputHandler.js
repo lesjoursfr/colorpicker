@@ -1,30 +1,29 @@
-'use strict';
-
-import $ from 'jquery';
-import ColorItem from './ColorItem';
+import { ColorItem, getAttribute, setAttribute, getData, hasTagName, on, off, trigger } from "../core/index.js";
 
 /**
  * Handles everything related to the colorpicker input
  * @ignore
  */
-class InputHandler {
+export class InputHandler {
   /**
    * @param {Colorpicker} colorpicker
    */
   constructor(colorpicker) {
+    this.onkeyup = this.onkeyup.bind(this);
+    this.onchange = this.onchange.bind(this);
+
     /**
      * @type {Colorpicker}
      */
     this.colorpicker = colorpicker;
     /**
-     * @type {jQuery|false}
+     * @type {HTMLElement}
      */
-    this.input = this.colorpicker.element.is('input') ? this.colorpicker.element : (this.colorpicker.options.input ?
-      this.colorpicker.element.find(this.colorpicker.options.input) : false);
-
-    if (this.input && (this.input.length === 0)) {
-      this.input = false;
-    }
+    this.input = hasTagName(this.colorpicker.element, "input")
+      ? this.colorpicker.element
+      : this.colorpicker.options.input
+      ? this.colorpicker.element.querySelector(this.colorpicker.options.input)
+      : null;
 
     this._initValue();
   }
@@ -33,19 +32,15 @@ class InputHandler {
     if (!this.hasInput()) {
       return;
     }
-    this.input.on({
-      'keyup.colorpicker': $.proxy(this.onkeyup, this)
-    });
-    this.input.on({
-      'change.colorpicker': $.proxy(this.onchange, this)
-    });
+    on(this.input, "keyup.colorpicker", this.onkeyup);
+    on(this.input, "change.colorpicker", this.onchange);
   }
 
   unbind() {
     if (!this.hasInput()) {
       return;
     }
-    this.input.off('.colorpicker');
+    off(this.input, "*.colorpicker");
   }
 
   _initValue() {
@@ -53,26 +48,26 @@ class InputHandler {
       return;
     }
 
-    let val = '';
+    let val = "";
 
     [
       // candidates:
-      this.input.val(),
-      this.input.data('color'),
-      this.input.attr('data-color')
-    ].map((item) => {
-      if (item && (val === '')) {
+      this.input.value,
+      getData(this.input, "color"),
+      getAttribute(this.input, "data-color"),
+    ].forEach((item) => {
+      if (item && val === "") {
         val = item;
       }
     });
 
     if (val instanceof ColorItem) {
       val = this.getFormattedColor(val.string(this.colorpicker.format));
-    } else if (!(typeof val === 'string' || val instanceof String)) {
-      val = '';
+    } else if (!(typeof val === "string" || val instanceof String)) {
+      val = "";
     }
 
-    this.input.prop('value', val);
+    setAttribute(this.input, "value", val);
   }
 
   /**
@@ -86,7 +81,7 @@ class InputHandler {
       return false;
     }
 
-    return this.input.val();
+    return this.input.value;
   }
 
   /**
@@ -102,28 +97,23 @@ class InputHandler {
       return;
     }
 
-    let inputVal = this.input.prop('value');
+    const inputVal = getAttribute(this.input, "value");
 
-    val = val ? val : '';
+    val = val || "";
 
-    if (val === (inputVal ? inputVal : '')) {
+    if (val === (inputVal || "")) {
       // No need to set value or trigger any event if nothing changed
       return;
     }
 
-    this.input.prop('value', val);
+    setAttribute(this.input, "value", val);
 
     /**
      * (Input) Triggered on the input element when a new color is selected.
      *
      * @event Colorpicker#change
      */
-    this.input.trigger({
-      type: 'change',
-      colorpicker: this.colorpicker,
-      color: this.colorpicker.color,
-      value: val
-    });
+    trigger(this.input, "change", this.colorpicker, this.colorpicker.color, val);
   }
 
   /**
@@ -135,16 +125,16 @@ class InputHandler {
    * @returns {String}
    */
   getFormattedColor(val = null) {
-    val = val ? val : this.colorpicker.colorHandler.getColorString();
+    val = val || this.colorpicker.colorHandler.getColorString();
 
     if (!val) {
-      return '';
+      return "";
     }
 
     val = this.colorpicker.colorHandler.resolveColorDelegate(val, false);
 
     if (this.colorpicker.options.useHashPrefix === false) {
-      val = val.replace(/^#/g, '');
+      val = val.replace(/^#/g, "");
     }
 
     return val;
@@ -155,7 +145,7 @@ class InputHandler {
    * @returns {boolean}
    */
   hasInput() {
-    return (this.input !== false);
+    return this.input !== null;
   }
 
   /**
@@ -171,7 +161,7 @@ class InputHandler {
    * @returns {boolean}
    */
   isDisabled() {
-    return this.hasInput() && (this.input.prop('disabled') === true);
+    return this.hasInput() && getAttribute(this.input, "disabled") === "true";
   }
 
   /**
@@ -182,7 +172,7 @@ class InputHandler {
    */
   disable() {
     if (this.hasInput()) {
-      this.input.prop('disabled', true);
+      setAttribute(this.input, "disabled", "true");
     }
   }
 
@@ -194,7 +184,7 @@ class InputHandler {
    */
   enable() {
     if (this.hasInput()) {
-      this.input.prop('disabled', false);
+      setAttribute(this.input, "disabled", "false");
     }
   }
 
@@ -208,10 +198,7 @@ class InputHandler {
       return;
     }
 
-    if (
-      (this.colorpicker.options.autoInputFallback === false) &&
-      this.colorpicker.colorHandler.isInvalidColor()
-    ) {
+    if (this.colorpicker.options.autoInputFallback === false && this.colorpicker.colorHandler.isInvalidColor()) {
       // prevent update if color is invalid, autoInputFallback is disabled and the last event is keyup.
       return;
     }
@@ -227,10 +214,10 @@ class InputHandler {
    * @returns {boolean}
    */
   onchange(e) {
-    this.colorpicker.lastEvent.alias = 'input.change';
+    this.colorpicker.lastEvent.alias = "input.change";
     this.colorpicker.lastEvent.e = e;
 
-    let val = this.getValue();
+    const val = this.getValue();
 
     if (val !== e.value) {
       this.colorpicker.setValue(val);
@@ -245,15 +232,13 @@ class InputHandler {
    * @returns {boolean}
    */
   onkeyup(e) {
-    this.colorpicker.lastEvent.alias = 'input.keyup';
+    this.colorpicker.lastEvent.alias = "input.keyup";
     this.colorpicker.lastEvent.e = e;
 
-    let val = this.getValue();
+    const val = this.getValue();
 
     if (val !== e.value) {
       this.colorpicker.setValue(val);
     }
   }
 }
-
-export default InputHandler;

@@ -11,13 +11,44 @@
 		<script type="text/javascript" src="colorpicker.js"></script>
 	</head>
 
-	<body>
+	<body style="padding: 0 100px">
 		<h1>Colorpicker</h1>
 
-		<div id="editor"></div>
+		<h3>with addon</h3>
+		<div class="js-color-picker-1">
+			<span class="colorpicker-input-addon"><i></i></span>
+			<input type="text" class="form-control" name="main" required />
+		</div>
+
+		<h3>without addon</h3>
+		<div class="js-color-picker-2">
+			<input type="text" class="form-control" name="main" required />
+		</div>
 
 		<script type="text/javascript">
-			/* Initialize the Colorpicker */
+			let options = {
+				color: "#C83E2C",
+				popover: {
+					animation: true,
+					placement: "bottom",
+					fallbackPlacement: "flip",
+				},
+				useAlpha: true,
+				extensions: [
+					{
+						name: "debugger",
+					},
+					{
+						name: "preview",
+						options: {
+							showText: true,
+						},
+					},
+				],
+			};
+
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-1"), options);
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-2"), options);
 		</script>
 	</body>
 </html>

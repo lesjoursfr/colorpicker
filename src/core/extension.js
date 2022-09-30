@@ -1,16 +1,24 @@
-'use strict';
-
-import $ from 'jquery';
+import { on, off } from "./index.js";
 
 /**
  * Colorpicker extension class.
  */
-class Extension {
+export class Extension {
   /**
    * @param {Colorpicker} colorpicker
    * @param {Object} options
    */
   constructor(colorpicker, options = {}) {
+    this.onCreate = this.onCreate.bind(this);
+    this.onDestroy = this.onDestroy.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onInvalid = this.onInvalid.bind(this);
+    this.onShow = this.onShow.bind(this);
+    this.onHide = this.onHide.bind(this);
+    this.onEnable = this.onEnable.bind(this);
+    this.onDisable = this.onDisable.bind(this);
+
     /**
      * The colorpicker instance
      * @type {Colorpicker}
@@ -23,19 +31,19 @@ class Extension {
      */
     this.options = options;
 
-    if (!(this.colorpicker.element && this.colorpicker.element.length)) {
-      throw new Error('Extension: this.colorpicker.element is not valid');
+    if (!this.colorpicker.element) {
+      throw new Error("Extension: this.colorpicker.element is not valid");
     }
 
-    this.colorpicker.element.on('colorpickerCreate.colorpicker-ext', $.proxy(this.onCreate, this));
-    this.colorpicker.element.on('colorpickerDestroy.colorpicker-ext', $.proxy(this.onDestroy, this));
-    this.colorpicker.element.on('colorpickerUpdate.colorpicker-ext', $.proxy(this.onUpdate, this));
-    this.colorpicker.element.on('colorpickerChange.colorpicker-ext', $.proxy(this.onChange, this));
-    this.colorpicker.element.on('colorpickerInvalid.colorpicker-ext', $.proxy(this.onInvalid, this));
-    this.colorpicker.element.on('colorpickerShow.colorpicker-ext', $.proxy(this.onShow, this));
-    this.colorpicker.element.on('colorpickerHide.colorpicker-ext', $.proxy(this.onHide, this));
-    this.colorpicker.element.on('colorpickerEnable.colorpicker-ext', $.proxy(this.onEnable, this));
-    this.colorpicker.element.on('colorpickerDisable.colorpicker-ext', $.proxy(this.onDisable, this));
+    on(this.colorpicker.element, "colorpickerCreate.colorpicker-ext", this.onCreate);
+    on(this.colorpicker.element, "colorpickerDestroy.colorpicker-ext", this.onDestroy);
+    on(this.colorpicker.element, "colorpickerUpdate.colorpicker-ext", this.onUpdate);
+    on(this.colorpicker.element, "colorpickerChange.colorpicker-ext", this.onChange);
+    on(this.colorpicker.element, "colorpickerInvalid.colorpicker-ext", this.onInvalid);
+    on(this.colorpicker.element, "colorpickerShow.colorpicker-ext", this.onShow);
+    on(this.colorpicker.element, "colorpickerHide.colorpicker-ext", this.onHide);
+    on(this.colorpicker.element, "colorpickerEnable.colorpicker-ext", this.onEnable);
+    on(this.colorpicker.element, "colorpickerDisable.colorpicker-ext", this.onDisable);
   }
 
   /**
@@ -68,7 +76,7 @@ class Extension {
    * @param {Event} event
    */
   onDestroy(event) {
-    this.colorpicker.element.off('.colorpicker-ext');
+    off(this.colorpicker.element, "*.colorpicker-ext");
   }
 
   /**
@@ -141,5 +149,3 @@ class Extension {
     // to be extended
   }
 }
-
-export default Extension;

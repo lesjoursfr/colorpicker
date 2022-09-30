@@ -1,16 +1,11 @@
-'use strict';
-/**
- * @module
- */
-
 // adjust these values accordingly to the sass vars
-let sassVars = {
-  'bar_size_short': 16,
-  'base_margin': 6,
-  'columns': 6
+const sassVars = {
+  bar_size_short: 16,
+  base_margin: 6,
+  columns: 6,
 };
 
-let sliderSize = (sassVars.bar_size_short * sassVars.columns) + (sassVars.base_margin * (sassVars.columns - 1));
+const sliderSize = sassVars.bar_size_short * sassVars.columns + sassVars.base_margin * (sassVars.columns - 1);
 
 /**
  * Colorpicker default options
@@ -48,7 +43,7 @@ export default {
    * @type {('rgb'|'hex'|'hsl'|'auto'|null)}
    * @default 'auto'
    */
-  format: 'auto',
+  format: "auto",
   /**
    * Horizontal mode layout.
    *
@@ -89,8 +84,8 @@ export default {
    */
   popover: {
     animation: true,
-    placement: 'bottom',
-    fallbackPlacement: 'flip'
+    placement: "bottom",
+    fallbackPlacement: "flip",
   },
   /**
    * If true, loads the 'debugger' extension automatically, which logs the events in the console
@@ -104,7 +99,7 @@ export default {
    * @type {String}
    * @default 'input'
    */
-  input: 'input',
+  input: "input",
   /**
    * Child CSS selector for the colorpicker addon.
    * If it exists, the child <i> element background will be changed on color change.
@@ -112,7 +107,7 @@ export default {
    * @type {String}
    * @default '.colorpicker-trigger, .colorpicker-input-addon'
    */
-  addon: '.colorpicker-input-addon',
+  addon: ".colorpicker-input-addon",
   /**
    * If true, the input content will be replaced always with a valid color,
    * if false, the invalid color will be left in the input,
@@ -203,11 +198,11 @@ export default {
    */
   extensions: [
     {
-      name: 'preview',
+      name: "preview",
       options: {
-        showText: true
-      }
-    }
+        showText: true,
+      },
+    },
   ],
   /**
    * Vertical sliders configuration
@@ -215,27 +210,27 @@ export default {
    */
   sliders: {
     saturation: {
-      selector: '.colorpicker-saturation',
+      selector: ".colorpicker-saturation",
       maxLeft: sliderSize,
       maxTop: sliderSize,
-      callLeft: 'setSaturationRatio',
-      callTop: 'setValueRatio'
+      callLeft: "setSaturationRatio",
+      callTop: "setValueRatio",
     },
     hue: {
-      selector: '.colorpicker-hue',
+      selector: ".colorpicker-hue",
       maxLeft: 0,
       maxTop: sliderSize,
       callLeft: false,
-      callTop: 'setHueRatio'
+      callTop: "setHueRatio",
     },
     alpha: {
-      selector: '.colorpicker-alpha',
-      childSelector: '.colorpicker-alpha-color',
+      selector: ".colorpicker-alpha",
+      childSelector: ".colorpicker-alpha-color",
       maxLeft: 0,
       maxTop: sliderSize,
       callLeft: false,
-      callTop: 'setAlphaRatio'
-    }
+      callTop: "setAlphaRatio",
+    },
   },
   /**
    * Horizontal sliders configuration
@@ -243,26 +238,26 @@ export default {
    */
   slidersHorz: {
     saturation: {
-      selector: '.colorpicker-saturation',
+      selector: ".colorpicker-saturation",
       maxLeft: sliderSize,
       maxTop: sliderSize,
-      callLeft: 'setSaturationRatio',
-      callTop: 'setValueRatio'
+      callLeft: "setSaturationRatio",
+      callTop: "setValueRatio",
     },
     hue: {
-      selector: '.colorpicker-hue',
+      selector: ".colorpicker-hue",
       maxLeft: sliderSize,
       maxTop: 0,
-      callLeft: 'setHueRatio',
-      callTop: false
+      callLeft: "setHueRatio",
+      callTop: false,
     },
     alpha: {
-      selector: '.colorpicker-alpha',
-      childSelector: '.colorpicker-alpha-color',
+      selector: ".colorpicker-alpha",
+      childSelector: ".colorpicker-alpha-color",
       maxLeft: sliderSize,
       maxTop: 0,
-      callLeft: 'setAlphaRatio',
-      callTop: false
-    }
-  }
+      callLeft: "setAlphaRatio",
+      callTop: false,
+    },
+  },
 };

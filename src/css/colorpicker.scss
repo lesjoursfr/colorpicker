@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $outline-color: rgba(0, 0, 0, 0.2);
 $box-shadow-outline: 0 0 0 1px $outline-color;
 $bar-size-short: 16px !default;
@@ -23,7 +25,7 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 			rgba(0, 0, 0, 0.1) 0
 		),
 		rgb(255, 255, 255);
-	background-position: 0 0, $size/2 $size/2;
+	background-position: 0 0, math.div($size, 2) math.div($size, 2);
 	background-size: $size $size;
 }
 
@@ -104,7 +106,7 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 	z-index: 1060;
 }
 
-.colorpicker-popup.colorpicker-bs-popover-content {
+.colorpicker-popup.colorpicker-popover-content {
 	background: none;
 	border: 0;
 	border-radius: 0;
@@ -337,14 +339,14 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 
 .colorpicker-inline::before,
 .colorpicker-no-arrow::before,
-.colorpicker-popup.colorpicker-bs-popover-content::before {
+.colorpicker-popup.colorpicker-popover-content::before {
 	content: none;
 	display: none;
 }
 
 .colorpicker-inline::after,
 .colorpicker-no-arrow::after,
-.colorpicker-popup.colorpicker-bs-popover-content::after {
+.colorpicker-popup.colorpicker-popover-content::after {
 	content: none;
 	display: none;
 }

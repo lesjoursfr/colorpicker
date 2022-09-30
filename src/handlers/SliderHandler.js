@@ -1,16 +1,22 @@
-'use strict';
-
-import $ from 'jquery';
+import { is, offset, on, off } from "../core/index.js";
 
 /**
  * Class that handles all configured sliders on mouse or touch events.
  * @ignore
  */
-class SliderHandler {
+export class SliderHandler {
   /**
    * @param {Colorpicker} colorpicker
    */
-  constructor(colorpicker) {
+  constructor(colorpicker, root) {
+    this.pressed = this.pressed.bind(this);
+    this.moved = this.moved.bind(this);
+    this.released = this.released.bind(this);
+
+    /**
+     * @type {Window}
+     */
+    this.root = root;
     /**
      * @type {Colorpicker}
      */
@@ -26,13 +32,8 @@ class SliderHandler {
      */
     this.mousePointer = {
       left: 0,
-      top: 0
+      top: 0,
     };
-
-    /**
-     * @type {Function}
-     */
-    this.onMove = $.proxy(this.defaultOnMove, this);
   }
 
   /**
@@ -47,14 +48,16 @@ class SliderHandler {
       return;
     }
 
-    let slider = this.currentSlider, cp = this.colorpicker, ch = cp.colorHandler;
+    const slider = this.currentSlider;
+    const cp = this.colorpicker;
+    const ch = cp.colorHandler;
 
     // Create a color object
-    let color = !ch.hasColor() ? ch.getFallbackColor() : ch.color.getClone();
+    const color = !ch.hasColor() ? ch.getFallbackColor() : ch.color.getClone();
 
     // Adjust the guide position
-    slider.guideStyle.left = left + 'px';
-    slider.guideStyle.top = top + 'px';
+    slider.guideStyle.left = left + "px";
+    slider.guideStyle.top = top + "px";
 
     // Adjust the color
     if (slider.callLeft) {
@@ -73,33 +76,33 @@ class SliderHandler {
    * Binds the colorpicker sliders to the mouse/touch events
    */
   bind() {
-    let sliders = this.colorpicker.options.horizontal ? this.colorpicker
-      .options.slidersHorz : this.colorpicker.options.sliders;
+    const sliders = this.colorpicker.options.horizontal
+      ? this.colorpicker.options.slidersHorz
+      : this.colorpicker.options.sliders;
 
-    let sliderClasses = [];
+    const sliderClasses = [];
 
-    for (let sliderName in sliders) {
-      if (!sliders.hasOwnProperty(sliderName)) {
+    for (const sliderName in sliders) {
+      if (!Object.hasOwn(sliders, sliderName)) {
         continue;
       }
 
       sliderClasses.push(sliders[sliderName].selector);
     }
 
-    this.colorpicker.picker.find(sliderClasses.join(', '))
-      .on('mousedown.colorpicker touchstart.colorpicker', $.proxy(this.pressed, this));
+    on(
+      this.colorpicker.picker.querySelectorAll(sliderClasses.join(", ")),
+      "mousedown.colorpicker touchstart.colorpicker",
+      this.pressed
+    );
   }
 
   /**
    * Unbinds any event bound by this handler
    */
   unbind() {
-    $(this.colorpicker.picker).off({
-      'mousemove.colorpicker': $.proxy(this.moved, this),
-      'touchmove.colorpicker': $.proxy(this.moved, this),
-      'mouseup.colorpicker': $.proxy(this.released, this),
-      'touchend.colorpicker': $.proxy(this.released, this)
-    });
+    off(this.colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker");
+    off(this.colorpicker.picker, "mouseup.colorpicker touchend.colorpicker");
   }
 
   /**
@@ -113,62 +116,63 @@ class SliderHandler {
     if (this.colorpicker.isDisabled()) {
       return;
     }
-    this.colorpicker.lastEvent.alias = 'pressed';
+    this.colorpicker.lastEvent.alias = "pressed";
     this.colorpicker.lastEvent.e = e;
 
-    if (!e.pageX && !e.pageY && e.originalEvent && e.originalEvent.touches) {
-      e.pageX = e.originalEvent.touches[0].pageX;
-      e.pageY = e.originalEvent.touches[0].pageY;
+    if (!e.pageX && !e.pageY && e.touches) {
+      e.pageX = e.touches[0].pageX;
+      e.pageY = e.touches[0].pageY;
     }
     // e.stopPropagation();
     // e.preventDefault();
 
-    let target = $(e.target);
+    const target = e.target;
 
     // detect the slider and set the limits and callbacks
-    let zone = target.closest('div');
+    let zone = target.closest("div");
 
-    let sliders = this.colorpicker.options.horizontal ? this.colorpicker
-      .options.slidersHorz : this.colorpicker.options.sliders;
+    const sliders = this.colorpicker.options.horizontal
+      ? this.colorpicker.options.slidersHorz
+      : this.colorpicker.options.sliders;
 
-    if (zone.is('.colorpicker')) {
+    if (is(zone, ".colorpicker")) {
       return;
     }
 
     this.currentSlider = null;
 
-    for (let sliderName in sliders) {
-      if (!sliders.hasOwnProperty(sliderName)) {
+    for (const sliderName in sliders) {
+      if (!Object.hasOwn(sliders, sliderName)) {
         continue;
       }
 
-      let slider = sliders[sliderName];
+      const slider = sliders[sliderName];
 
-      if (zone.is(slider.selector)) {
-        this.currentSlider = $.extend({}, slider, {name: sliderName});
+      if (is(zone, slider.selector)) {
+        this.currentSlider = Object.assign({}, structuredClone(slider), { name: sliderName });
         break;
-      } else if (slider.childSelector !== undefined && zone.is(slider.childSelector)) {
-        this.currentSlider = $.extend({}, slider, {name: sliderName});
-        zone = zone.parent(); // zone.parents(slider.selector).first() ?
+      } else if (slider.childSelector !== undefined && is(zone, slider.childSelector)) {
+        this.currentSlider = Object.assign({}, structuredClone(slider), { name: sliderName });
+        zone = zone.parentNode; // zone.parents(slider.selector).first() ?
         break;
       }
     }
 
-    let guide = zone.find('.colorpicker-guide').get(0);
+    const guide = zone.querySelector(".colorpicker-guide");
 
     if (this.currentSlider === null || guide === null) {
       return;
     }
 
-    let offset = zone.offset();
+    const zoneOffset = offset(zone);
 
     // reference to guide's style
     this.currentSlider.guideStyle = guide.style;
-    this.currentSlider.left = e.pageX - offset.left;
-    this.currentSlider.top = e.pageY - offset.top;
+    this.currentSlider.left = e.pageX - zoneOffset.left;
+    this.currentSlider.top = e.pageY - zoneOffset.top;
     this.mousePointer = {
       left: e.pageX,
-      top: e.pageY
+      top: e.pageY,
     };
 
     // TODO: fix moving outside the picker makes the guides to keep moving. The event needs to be bound to the window.
@@ -178,12 +182,10 @@ class SliderHandler {
      *
      * @event Colorpicker#mousemove
      */
-    $(this.colorpicker.picker).on({
-      'mousemove.colorpicker': $.proxy(this.moved, this),
-      'touchmove.colorpicker': $.proxy(this.moved, this),
-      'mouseup.colorpicker': $.proxy(this.released, this),
-      'touchend.colorpicker': $.proxy(this.released, this)
-    }).trigger('mousemove');
+    on(this.colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker", this.moved);
+    on(this.root.document, "mouseup.colorpicker touchend.colorpicker", this.released);
+
+    this.colorpicker.picker.dispatchEvent(new MouseEvent("mousedown"));
   }
 
   /**
@@ -193,18 +195,18 @@ class SliderHandler {
    * @param {Event} e
    */
   moved(e) {
-    this.colorpicker.lastEvent.alias = 'moved';
+    this.colorpicker.lastEvent.alias = "moved";
     this.colorpicker.lastEvent.e = e;
 
-    if (!e.pageX && !e.pageY && e.originalEvent && e.originalEvent.touches) {
-      e.pageX = e.originalEvent.touches[0].pageX;
-      e.pageY = e.originalEvent.touches[0].pageY;
+    if (!e.pageX && !e.pageY && e.touches) {
+      e.pageX = e.touches[0].pageX;
+      e.pageY = e.touches[0].pageY;
     }
 
     // e.stopPropagation();
     e.preventDefault(); // prevents scrolling on mobile
 
-    let left = Math.max(
+    const left = Math.max(
       0,
       Math.min(
         this.currentSlider.maxLeft,
@@ -212,7 +214,7 @@ class SliderHandler {
       )
     );
 
-    let top = Math.max(
+    const top = Math.max(
       0,
       Math.min(
         this.currentSlider.maxTop,
@@ -220,7 +222,7 @@ class SliderHandler {
       )
     );
 
-    this.onMove(top, left);
+    this.defaultOnMove(top, left);
   }
 
   /**
@@ -230,19 +232,13 @@ class SliderHandler {
    * @param {Event} e
    */
   released(e) {
-    this.colorpicker.lastEvent.alias = 'released';
+    this.colorpicker.lastEvent.alias = "released";
     this.colorpicker.lastEvent.e = e;
 
     // e.stopPropagation();
     // e.preventDefault();
 
-    $(this.colorpicker.picker).off({
-      'mousemove.colorpicker': this.moved,
-      'touchmove.colorpicker': this.moved,
-      'mouseup.colorpicker': this.released,
-      'touchend.colorpicker': this.released
-    });
+    off(this.colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker");
+    off(this.root.document, "mouseup.colorpicker touchend.colorpicker", this.released);
   }
 }
-
-export default SliderHandler;

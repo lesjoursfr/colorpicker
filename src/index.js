@@ -1,20 +1,30 @@
-'use strict';
+"use strict";
 
-import Extension from './Extension';
-import defaults from './options';
-import coreExtensions from 'extensions';
-import $ from 'jquery';
-import SliderHandler from './SliderHandler';
-import PopupHandler from './PopupHandler';
-import InputHandler from './InputHandler';
-import ColorHandler from './ColorHandler';
-import PickerHandler from './PickerHandler';
-import AddonHandler from './AddonHandler';
-import ColorItem from './ColorItem';
+import defaults from "./options.js";
+import * as coreExtensions from "./extensions/index.js";
+import {
+  SliderHandler,
+  PopupHandler,
+  InputHandler,
+  ColorHandler,
+  PickerHandler,
+  AddonHandler,
+} from "./handlers/index.js";
+import {
+  ColorItem,
+  Extension,
+  setAttribute,
+  getData,
+  setData,
+  addClass,
+  removeClass,
+  off,
+  trigger,
+} from "./core/index.js";
 
 let colorPickerIdCounter = 0;
 
-let root = (typeof self !== 'undefined' ? self : this); // window
+const root = typeof self !== "undefined" ? self : this; // window
 
 /**
  * Colorpicker widget class
@@ -61,7 +71,7 @@ class Colorpicker {
   /**
    * Getter of the picker element
    *
-   * @returns {jQuery|HTMLElement}
+   * @returns {HTMLElement}
    */
   get picker() {
     return this.pickerHandler.picker;
@@ -88,22 +98,27 @@ class Colorpicker {
      */
     this.lastEvent = {
       alias: null,
-      e: null
+      e: null,
     };
 
     /**
      * The element that the colorpicker is bound to
      *
-     * @type {*|jQuery}
+     * @type {HTMLElement}
      */
-    this.element = $(element)
-      .addClass('colorpicker-element')
-      .attr('data-colorpicker-id', this.id);
+    this.element = element;
+    addClass(this.element, "colorpicker-element");
+    setAttribute(this.element, "data-colorpicker-id", this.id);
 
     /**
      * @type {defaults}
      */
-    this.options = $.extend(true, {}, defaults, options, this.element.data());
+    this.options = Object.assign(
+      {},
+      structuredClone(defaults),
+      structuredClone(options),
+      structuredClone(getData(this.element))
+    );
 
     /**
      * @type {boolean}
@@ -120,14 +135,14 @@ class Colorpicker {
 
     /**
      * The element where the
-     * @type {*|jQuery}
+     * @type {*|HTMLElement}
      */
-    this.container = (
-      this.options.container === true ||
-      (this.options.container !== true && this.options.inline === true)
-    ) ? this.element : this.options.container;
+    this.container =
+      this.options.container === true || (this.options.container !== true && this.options.inline === true)
+        ? this.element
+        : this.options.container;
 
-    this.container = (this.container !== false) ? $(this.container) : false;
+    this.container = this.container !== false ? this.container : false;
 
     /**
      * @type {InputHandler}
@@ -140,7 +155,7 @@ class Colorpicker {
     /**
      * @type {SliderHandler}
      */
-    this.sliderHandler = new SliderHandler(this);
+    this.sliderHandler = new SliderHandler(this, root);
     /**
      * @type {PopupHandler}
      */
@@ -157,14 +172,18 @@ class Colorpicker {
     this.init();
 
     // Emit a create event
-    $($.proxy(function () {
-      /**
-       * (Colorpicker) When the Colorpicker instance has been created and the DOM is ready.
-       *
-       * @event Colorpicker#colorpickerCreate
-       */
-      this.trigger('colorpickerCreate');
-    }, this));
+    window.addEventListener(
+      "load",
+      (event) => {
+        /**
+         * (Colorpicker) When the Colorpicker instance has been created and the DOM is ready.
+         *
+         * @event Colorpicker#colorpickerCreate
+         */
+        this.trigger("colorpickerCreate");
+      },
+      { once: true }
+    );
   }
 
   /**
@@ -212,7 +231,7 @@ class Colorpicker {
     }
 
     if (this.options.debug) {
-      this.options.extensions.push({name: 'debugger'});
+      this.options.extensions.push({ name: "debugger" });
     }
 
     // Register and instantiate extensions
@@ -229,7 +248,7 @@ class Colorpicker {
    * @returns {Extension}
    */
   registerExtension(ExtensionClass, config = {}) {
-    let ext = new ExtensionClass(this, config);
+    const ext = new ExtensionClass(this, config);
 
     this.extensions.push(ext);
     return ext;
@@ -241,7 +260,7 @@ class Colorpicker {
    * @fires Colorpicker#colorpickerDestroy
    */
   destroy() {
-    let color = this.color;
+    const color = this.color;
 
     this.sliderHandler.unbind();
     this.inputHandler.unbind();
@@ -250,18 +269,17 @@ class Colorpicker {
     this.addonHandler.unbind();
     this.pickerHandler.unbind();
 
-    this.element
-      .removeClass('colorpicker-element')
-      .removeData('colorpicker')
-      .removeData('color')
-      .off('.colorpicker');
+    removeClass(this.element, "colorpicker-element");
+    setData(this.element, "colorpicker", null);
+    setData(this.element, "color", null);
+    off(this.element, "*.colorpicker");
 
     /**
      * (Colorpicker) When the instance is destroyed with all events unbound.
      *
      * @event Colorpicker#colorpickerDestroy
      */
-    this.trigger('colorpickerDestroy', color);
+    this.trigger("colorpickerDestroy", color);
   }
 
   /**
@@ -305,7 +323,7 @@ class Colorpicker {
   getValue(defaultValue = null) {
     let val = this.colorHandler.color;
 
-    val = (val instanceof ColorItem) ? val : defaultValue;
+    val = val instanceof ColorItem ? val : defaultValue;
 
     if (val instanceof ColorItem) {
       return val.string(this.format);
@@ -324,12 +342,9 @@ class Colorpicker {
     if (this.isDisabled()) {
       return;
     }
-    let ch = this.colorHandler;
+    const ch = this.colorHandler;
 
-    if (
-      (ch.hasColor() && !!val && ch.color.equals(val)) ||
-      (!ch.hasColor() && !val)
-    ) {
+    if ((ch.hasColor() && !!val && ch.color.equals(val)) || (!ch.hasColor() && !val)) {
       // same color or still empty
       return;
     }
@@ -341,7 +356,7 @@ class Colorpicker {
      *
      * @event Colorpicker#colorpickerChange
      */
-    this.trigger('colorpickerChange', ch.color, val);
+    this.trigger("colorpickerChange", ch.color, val);
 
     // force update if color has changed to empty
     this.update();
@@ -367,7 +382,7 @@ class Colorpicker {
      *
      * @event Colorpicker#colorpickerUpdate
      */
-    this.trigger('colorpickerUpdate');
+    this.trigger("colorpickerUpdate");
   }
 
   /**
@@ -379,14 +394,14 @@ class Colorpicker {
   enable() {
     this.inputHandler.enable();
     this.disabled = false;
-    this.picker.removeClass('colorpicker-disabled');
+    removeClass(this.picker, "colorpicker-disabled");
 
     /**
      * (Colorpicker) When the widget has been enabled.
      *
      * @event Colorpicker#colorpickerEnable
      */
-    this.trigger('colorpickerEnable');
+    this.trigger("colorpickerEnable");
     return true;
   }
 
@@ -399,14 +414,14 @@ class Colorpicker {
   disable() {
     this.inputHandler.disable();
     this.disabled = true;
-    this.picker.addClass('colorpicker-disabled');
+    addClass(this.picker, "colorpicker-disabled");
 
     /**
      * (Colorpicker) When the widget has been disabled.
      *
      * @event Colorpicker#colorpickerDisable
      */
-    this.trigger('colorpickerDisable');
+    this.trigger("colorpickerDisable");
     return true;
   }
 
@@ -434,12 +449,7 @@ class Colorpicker {
    * @param value
    */
   trigger(eventName, color = null, value = null) {
-    this.element.trigger({
-      type: eventName,
-      colorpicker: this,
-      color: color ? color : this.color,
-      value: value ? value : this.getValue()
-    });
+    trigger(this.element, eventName, this, color || this.color, value || this.getValue());
   }
 }
 
@@ -449,6 +459,11 @@ class Colorpicker {
  * @static
  * @type {Object} a map between the extension name and its class
  */
-Colorpicker.extensions = coreExtensions;
+Colorpicker.extensions = {
+  debugger: coreExtensions.Debugger,
+  palette: coreExtensions.Palette,
+  preview: coreExtensions.Preview,
+  swatches: coreExtensions.Swatches,
+};
 
-export default Colorpicker;
+export { Colorpicker };

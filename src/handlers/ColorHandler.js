@@ -1,13 +1,10 @@
-'use strict';
-
-import $ from 'jquery';
-import ColorItem from './ColorItem';
+import { ColorItem, getData, setData } from "../core/index.js";
 
 /**
  * Handles everything related to the colorpicker color
  * @ignore
  */
-class ColorHandler {
+export class ColorHandler {
   /**
    * @param {Colorpicker} colorpicker
    */
@@ -22,8 +19,11 @@ class ColorHandler {
    * @returns {*|String|ColorItem}
    */
   get fallback() {
-    return this.colorpicker.options.fallbackColor ?
-      this.colorpicker.options.fallbackColor : (this.hasColor() ? this.color : null);
+    return this.colorpicker.options.fallbackColor
+      ? this.colorpicker.options.fallbackColor
+      : this.hasColor()
+      ? this.color
+      : null;
   }
 
   /**
@@ -35,14 +35,14 @@ class ColorHandler {
     }
 
     if (this.hasColor() && this.color.hasTransparency() && this.color.format.match(/^hex/)) {
-      return this.isAlphaEnabled() ? 'rgba' : 'hex';
+      return this.isAlphaEnabled() ? "rgba" : "hex";
     }
 
     if (this.hasColor()) {
       return this.color.format;
     }
 
-    return 'rgb';
+    return "rgb";
   }
 
   /**
@@ -51,7 +51,7 @@ class ColorHandler {
    * @type {ColorItem|null}
    */
   get color() {
-    return this.colorpicker.element.data('color');
+    return getData(this.colorpicker.element, "color");
   }
 
   /**
@@ -61,9 +61,9 @@ class ColorHandler {
    * @param {ColorItem|null} value
    */
   set color(value) {
-    this.colorpicker.element.data('color', value);
+    setData(this.colorpicker.element, "color", value);
 
-    if ((value instanceof ColorItem) && (this.colorpicker.options.format === 'auto')) {
+    if (value instanceof ColorItem && this.colorpicker.options.format === "auto") {
       // If format is 'auto', use the first parsed one from now on
       this.colorpicker.options.format = this.color.format;
     }
@@ -79,13 +79,14 @@ class ColorHandler {
     // if element[color] is empty and the input has a value
     if (!this.color && !!this.colorpicker.inputHandler.getValue()) {
       this.color = this.createColor(
-        this.colorpicker.inputHandler.getValue(), this.colorpicker.options.autoInputFallback
+        this.colorpicker.inputHandler.getValue(),
+        this.colorpicker.options.autoInputFallback
       );
     }
   }
 
   unbind() {
-    this.colorpicker.element.removeData('color');
+    setData(this.colorpicker.element, "color", null);
   }
 
   /**
@@ -96,7 +97,7 @@ class ColorHandler {
    */
   getColorString() {
     if (!this.hasColor()) {
-      return '';
+      return "";
     }
 
     return this.color.string(this.format);
@@ -108,9 +109,9 @@ class ColorHandler {
    * @param {String|ColorItem} val
    */
   setColorString(val) {
-    let color = val ? this.createColor(val) : null;
+    const color = val ? this.createColor(val) : null;
 
-    this.color = color ? color : null;
+    this.color = color || null;
   }
 
   /**
@@ -123,7 +124,7 @@ class ColorHandler {
    * @returns {ColorItem}
    */
   createColor(val, fallbackOnInvalid = true, autoHexInputFallback = false) {
-    let disableHexInputFallback = !fallbackOnInvalid && !autoHexInputFallback;
+    const disableHexInputFallback = !fallbackOnInvalid && !autoHexInputFallback;
 
     let color = new ColorItem(this.resolveColorDelegate(val), this.format, disableHexInputFallback);
 
@@ -137,7 +138,7 @@ class ColorHandler {
        *
        * @event Colorpicker#colorpickerInvalid
        */
-      this.colorpicker.trigger('colorpickerInvalid', color, val);
+      this.colorpicker.trigger("colorpickerInvalid", color, val);
     }
 
     if (!this.isAlphaEnabled()) {
@@ -149,17 +150,17 @@ class ColorHandler {
   }
 
   getFallbackColor() {
-    if (this.fallback && (this.fallback === this.color)) {
+    if (this.fallback && this.fallback === this.color) {
       return this.color;
     }
 
-    let fallback = this.resolveColorDelegate(this.fallback);
+    const fallback = this.resolveColorDelegate(this.fallback);
 
-    let color = new ColorItem(fallback, this.format);
+    const color = new ColorItem(fallback, this.format);
 
     if (!color.isValid()) {
-      console.warn('The fallback color is invalid. Falling back to the previous color or black if any.');
-      return this.color ? this.color : new ColorItem('#000000', this.format);
+      console.warn("The fallback color is invalid. Falling back to the previous color or black if any.");
+      return this.color ? this.color : new ColorItem("#000000", this.format);
     }
 
     return color;
@@ -186,15 +187,15 @@ class ColorHandler {
   resolveColorDelegate(color, realColor = true) {
     let extResolvedColor = false;
 
-    $.each(this.colorpicker.extensions, function (name, ext) {
+    for (const ext of this.colorpicker.extensions) {
       if (extResolvedColor !== false) {
         // skip if resolved
         return;
       }
       extResolvedColor = ext.resolveColor(color, realColor);
-    });
+    }
 
-    return extResolvedColor ? extResolvedColor : color;
+    return extResolvedColor || color;
   }
 
   /**
@@ -210,7 +211,7 @@ class ColorHandler {
    * @returns {boolean}
    */
   isAlphaEnabled() {
-    return (this.colorpicker.options.useAlpha !== false);
+    return this.colorpicker.options.useAlpha !== false;
   }
 
   /**
@@ -221,5 +222,3 @@ class ColorHandler {
     return this.color instanceof ColorItem;
   }
 }
-
-export default ColorHandler;
