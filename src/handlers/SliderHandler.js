@@ -69,7 +69,6 @@ export class SliderHandler {
 
     // Set the new color
     cp.setValue(color);
-    cp.popupHandler.focus();
   }
 
   /**

@@ -1,15 +1,5 @@
 import popper from "@popperjs/core";
-import {
-  hasAttribute,
-  getAttribute,
-  setAttribute,
-  hasClass,
-  addClass,
-  removeClass,
-  on,
-  off,
-  createFromTemplate,
-} from "../core/index.js";
+import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTemplate } from "../core/index.js";
 import _defaults from "../options.js";
 
 const defaults = {
@@ -30,7 +20,6 @@ export class PopupHandler {
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this.reposition = this.reposition.bind(this);
-    this.onClickingInside = this.onClickingInside.bind(this);
 
     /**
      * @type {Window}
@@ -109,7 +98,7 @@ export class PopupHandler {
   }
 
   /**
-   * Binds the different colorpicker elements to the focus/mouse/touch events so it reacts in order to show or
+   * Binds the different colorpicker elements to the mouse/touch events so it reacts in order to show or
    * hide the colorpicker popup accordingly. It also adds the proper classes.
    */
   bind() {
@@ -134,21 +123,12 @@ export class PopupHandler {
 
     // bind addon show/hide events
     if (this.hasAddon) {
-      // enable focus on addons
-      if (!hasAttribute(this.addon, "tabindex")) {
-        setAttribute(this.addon, "tabindex", 0);
-      }
-
       on(this.addon, "mousedown.colorpicker touchstart.colorpicker", this.toggle);
-      on(this.addon, "focus.colorpicker", this.show);
-      on(this.addon, "focusout.colorpicker", this.hide);
     }
 
     // bind input show/hide events
     if (this.hasInput && !this.hasAddon) {
       on(this.input, "mousedown.colorpicker touchstart.colorpicker", this.show);
-      on(this.input, "focus.colorpicker", this.show);
-      on(this.input, "focusout.colorpicker", this.hide);
     }
 
     // reposition popup on window resize
@@ -161,14 +141,10 @@ export class PopupHandler {
   unbind() {
     if (this.hasInput) {
       off(this.input, "mousedown.colorpicker touchstart.colorpicker");
-      off(this.input, "focus.colorpicker");
-      off(this.input, "focusout.colorpicker");
     }
 
     if (this.hasAddon) {
       off(this.addon, "mousedown.colorpicker touchstart.colorpicker");
-      off(this.addon, "focus.colorpicker");
-      off(this.addon, "focusout.colorpicker");
     }
 
     if (this.popperInstance) {
@@ -178,7 +154,6 @@ export class PopupHandler {
 
     off(this.root, "resize.colorpicker", this.reposition);
     off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
-    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
   }
 
   isClickingInside(e) {
@@ -200,10 +175,6 @@ export class PopupHandler {
     }
 
     return container.contains(element);
-  }
-
-  onClickingInside(e) {
-    this.clicking = this.isClickingInside(e);
   }
 
   createPopover() {
@@ -299,7 +270,6 @@ export class PopupHandler {
     if (this.isPopover) {
       // Add event to hide on outside click
       on(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
-      on(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
     }
 
     /**
@@ -332,8 +302,6 @@ export class PopupHandler {
     cp.lastEvent.alias = "hide";
     cp.lastEvent.e = e;
 
-    // TODO: fix having to click twice outside when losing focus and last 2 clicks where inside the colorpicker
-
     // Prevent hide if triggered by an event and an element inside the colorpicker has been clicked/touched
     if (clicking) {
       this.hidding = false;
@@ -361,7 +329,6 @@ export class PopupHandler {
     // Unbind window and document events, since there is no need to keep them while the popup is hidden
     off(this.root, "resize.colorpicker", this.reposition);
     off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
-    off(this.root.document, "mousedown.colorpicker touchstart.colorpicker", this.onClickingInside);
 
     /**
      * (Colorpicker) When hide() is called and the widget can be hidden.
@@ -369,16 +336,6 @@ export class PopupHandler {
      * @event Colorpicker#colorpickerHide
      */
     cp.trigger("colorpickerHide");
-  }
-
-  focus() {
-    if (this.hasAddon) {
-      return this.addon.focus();
-    }
-    if (this.hasInput) {
-      return this.input.focus();
-    }
-    return false;
   }
 
   /**
