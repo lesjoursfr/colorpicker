@@ -184,7 +184,7 @@ export class SliderHandler {
     on(this.colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker", this.moved);
     on(this.root.document, "mouseup.colorpicker touchend.colorpicker", this.released);
 
-    this.colorpicker.picker.dispatchEvent(new MouseEvent("mousedown"));
+    this.colorpicker.picker.dispatchEvent(new MouseEvent("mousemove"));
   }
 
   /**
