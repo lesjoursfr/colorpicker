@@ -59,14 +59,14 @@
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-n": "^15.3.0",
 		"eslint-plugin-promise": "^6.0.1",
-		"jsdom": "^20.0.0",
+		"jsdom": "^20.0.1",
 		"mini-css-extract-plugin": "^2.6.1",
-		"postcss": "^8.4.16",
+		"postcss": "^8.4.17",
 		"prettier": "^2.7.1",
 		"sass": "^1.55.0",
 		"sass-loader": "^13.0.2",
 		"style-loader": "^3.3.1",
-		"stylelint": "^14.12.1",
+		"stylelint": "^14.13.0",
 		"stylelint-config-prettier": "^9.0.3",
 		"stylelint-config-sass-guidelines": "^9.0.1",
 		"webpack": "^5.74.0",
@@ -76,5 +76,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.6"
 	},
-	"packageManager": "yarn@3.2.2"
+	"packageManager": "yarn@3.2.3"
 }
