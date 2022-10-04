@@ -416,6 +416,7 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	border-radius: 0.3rem;
 	display: none;
+	z-index: 1070;
 
 	&.colorpicker-popover-visible {
 		display: block;

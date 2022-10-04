@@ -116,7 +116,7 @@ export class PopupHandler {
       return;
     }
 
-    // create Bootstrap 4 popover
+    // create the popover
     if (cp.options.popover) {
       this.createPopover();
     }
