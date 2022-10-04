@@ -1,4 +1,4 @@
-import popper from "@popperjs/core";
+import { createPopper } from "@popperjs/core";
 import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTemplate } from "../core/index.js";
 import _defaults from "../options.js";
 
@@ -257,7 +257,7 @@ export class PopupHandler {
     removeClass(cp.picker, "colorpicker-hidden");
 
     if (this.popoverTarget) {
-      this.popperInstance = popper.createPopper(this.popoverTarget, this.popoverTip, this.getPopperConfig());
+      this.popperInstance = createPopper(this.popoverTarget, this.popoverTip, this.getPopperConfig());
       addClass(this.popoverTip, "colorpicker-popover-visible");
       setTimeout(() => this.fireShow());
     } else {
