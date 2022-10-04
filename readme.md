@@ -13,27 +13,14 @@ To work this library needs :
 
 ## How to use
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link href="dist/css/colorpicker.css" rel="stylesheet" />
-	</head>
-	<body>
-		<div id="demo">
-			<h1>Colorpicker Demo</h1>
-			<input type="text" value="rgb(255, 128, 0)" />
-		</div>
-		<script src="dist/js/colorpicker.js"></script>
-		<script>
-			colorpicker(window.querySelector("#demo"), {
-				inline: true,
-				container: "#demo",
-			});
-		</script>
-	</body>
-</html>
+```javascript
+import { Colorpicker } from "@lesjoursfr/colorpicker";
+
+/* Initialize the Colorpicker */
+new Colorpicker(document.querySelector("#colorpicker"), {
+	color: "#C83E2C",
+	useAlpha: true,
+});
 ```
 
 ## License
