@@ -3,7 +3,7 @@ import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTempl
 import _defaults from "../options.js";
 
 const defaults = {
-  popoverTemplate: `<div class="colorpicker-popover"></div>`,
+  popoverTemplate: `<div class="colorpicker-popover"><div class="colorpicker-popover-arrow"></div><div class="colorpicker-popover-body"></div></div>`,
 };
 
 /**
@@ -148,6 +148,7 @@ export class PopupHandler {
     }
 
     if (this.popperInstance) {
+      removeClass(this.popoverTip, "colorpicker-popover-visible");
       this.popperInstance.destroy();
       this.popperInstance = undefined;
     }
@@ -185,8 +186,12 @@ export class PopupHandler {
     addClass(cp.picker, "colorpicker-popover-content");
 
     this.popoverTip = createFromTemplate(defaults.popoverTemplate);
-    this.popoverTip.append(cp.picker);
+    this.popoverTip.querySelector(".colorpicker-popover-body").append(cp.picker);
     this.colorpicker.element.appendChild(this.popoverTip);
+  }
+
+  getPopperConfig() {
+    return Object.assign({}, structuredClone(_defaults.popover), structuredClone(this.colorpicker.options.popover));
   }
 
   /**
@@ -252,11 +257,8 @@ export class PopupHandler {
     removeClass(cp.picker, "colorpicker-hidden");
 
     if (this.popoverTarget) {
-      this.popperInstance = popper.createPopper(
-        this.popoverTarget,
-        this.popoverTip,
-        Object.assign({}, structuredClone(_defaults.popover), structuredClone(cp.options.popover))
-      );
+      this.popperInstance = popper.createPopper(this.popoverTarget, this.popoverTip, this.getPopperConfig());
+      addClass(this.popoverTip, "colorpicker-popover-visible");
       setTimeout(() => this.fireShow());
     } else {
       this.fireShow();
@@ -309,6 +311,7 @@ export class PopupHandler {
     }
 
     if (this.popperInstance) {
+      removeClass(this.popoverTip, "colorpicker-popover-visible");
       this.popperInstance.destroy();
       this.popperInstance = undefined;
     }

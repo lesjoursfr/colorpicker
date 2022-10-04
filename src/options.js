@@ -86,6 +86,20 @@ export default {
     animation: true,
     placement: "bottom",
     fallbackPlacement: "flip",
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 8],
+        },
+      },
+      {
+        name: "arrow",
+        options: {
+          element: ".colorpicker-popover-arrow",
+        },
+      },
+    ],
   },
   /**
    * If true, loads the 'debugger' extension automatically, which logs the events in the console
