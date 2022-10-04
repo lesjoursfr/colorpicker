@@ -54,7 +54,7 @@ export class PickerHandler {
     const pickerParent = this.colorpicker.container ? this.colorpicker.container : null;
 
     if (pickerParent) {
-      this.picker.appendTo(pickerParent);
+      pickerParent.append(this.picker);
     }
   }
 

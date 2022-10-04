@@ -19,20 +19,9 @@
 			<span class="colorpicker-input-addon"><i></i></span>
 			<input type="text" class="form-control" name="main" required />
 		</div>
-
-		<h3>without addon</h3>
-		<div class="js-color-picker-2">
-			<input type="text" class="form-control" name="main" required />
-		</div>
-
 		<script type="text/javascript">
-			let options = {
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-1"), {
 				color: "#C83E2C",
-				popover: {
-					animation: true,
-					placement: "bottom",
-					fallbackPlacement: "flip",
-				},
 				useAlpha: true,
 				extensions: [
 					{
@@ -45,10 +34,72 @@
 						},
 					},
 				],
-			};
+			});
+		</script>
 
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-1"), options);
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-2"), options);
+		<h3>without addon</h3>
+		<div class="js-color-picker-2">
+			<input type="text" class="form-control" name="main" required />
+		</div>
+		<script type="text/javascript">
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-2"), {
+				useAlpha: true,
+				extensions: [
+					{
+						name: "debugger",
+					},
+					{
+						name: "preview",
+						options: {
+							showText: true,
+						},
+					},
+				],
+			});
+		</script>
+
+		<h3>horizontal</h3>
+		<div class="js-color-picker-3">
+			<input type="text" class="form-control" name="main" required />
+		</div>
+		<script type="text/javascript">
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-3"), {
+				useAlpha: true,
+				horizontal: true,
+				extensions: [
+					{
+						name: "debugger",
+					},
+					{
+						name: "preview",
+						options: {
+							showText: true,
+						},
+					},
+				],
+			});
+		</script>
+
+		<h3>inline</h3>
+		<div class="js-color-picker-4">
+			<input type="text" class="form-control" name="main" required />
+		</div>
+		<script type="text/javascript">
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-4"), {
+				useAlpha: true,
+				inline: true,
+				extensions: [
+					{
+						name: "debugger",
+					},
+					{
+						name: "preview",
+						options: {
+							showText: true,
+						},
+					},
+				],
+			});
 		</script>
 	</body>
 </html>
