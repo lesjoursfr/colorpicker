@@ -1,4 +1,4 @@
-import { createFromTemplate, setAttribute, updateCSS, on } from "../core/index.js";
+import { createFromTemplate, getAttribute, setAttribute, updateCSS, on } from "../core/index.js";
 import { Palette } from "./palette.js";
 
 const defaults = {
@@ -36,10 +36,10 @@ export class Swatches extends Palette {
 
   load() {
     const colorpicker = this.colorpicker;
-    const swatchContainer = this.element.querySelectorAll(".colorpicker-swatches--inner");
+    const swatchContainer = this.element.querySelector(".colorpicker-swatches--inner");
     const isAliased = this.options.namesAsValues === true && !Array.isArray(this.colors);
 
-    swatchContainer.empty();
+    swatchContainer.replaceChildren();
 
     for (const [name, value] of Object.entries(this.colors)) {
       const swatch = createFromTemplate(this.options.swatchTemplate);
@@ -47,7 +47,7 @@ export class Swatches extends Palette {
       setAttribute(swatch, "data-value", value);
       setAttribute(swatch, "title", isAliased ? `${name}: ${value}` : value);
       on(swatch, "mousedown.colorpicker touchstart.colorpicker", (e) => {
-        colorpicker.setValue(isAliased ? this.getAttribute("data-name") : this.getAttribute("data-value"));
+        colorpicker.setValue(getAttribute(e.currentTarget, isAliased ? "data-name" : "data-value"));
       });
 
       for (const swatchInner of swatch.querySelectorAll(".colorpicker-swatch--inner")) {

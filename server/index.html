@@ -80,12 +80,44 @@
 			});
 		</script>
 
-		<h3>inline</h3>
+		<h3>swatches</h3>
 		<div class="js-color-picker-4">
 			<input type="text" class="form-control" name="main" required />
 		</div>
 		<script type="text/javascript">
 			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-4"), {
+				useAlpha: true,
+				extensions: [
+					{
+						name: "debugger",
+					},
+					{
+						name: "preview",
+						options: {
+							showText: true,
+						},
+					},
+					{
+						name: "swatches",
+						options: {
+							colors: {
+								color1: "#FFFFFF",
+								color2: "#C83E2C",
+								color3: "#DCAC2C",
+							},
+							namesAsValues: false,
+						},
+					},
+				],
+			});
+		</script>
+
+		<h3>inline</h3>
+		<div class="js-color-picker-5">
+			<input type="text" class="form-control" name="main" required />
+		</div>
+		<script type="text/javascript">
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-5"), {
 				useAlpha: true,
 				inline: true,
 				extensions: [
