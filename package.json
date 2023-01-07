@@ -45,16 +45,16 @@
 		"picker"
 	],
 	"devDependencies": {
-		"@babel/core": "^7.20.5",
+		"@babel/core": "^7.20.12",
 		"@babel/preset-env": "^7.20.2",
 		"@popperjs/core": "^2.11.6",
 		"@types/color": "^3.0.3",
 		"ava": "^5.1.0",
-		"babel-loader": "^9.1.0",
+		"babel-loader": "^9.1.2",
 		"color": "^4.2.3",
 		"css-loader": "^6.7.3",
-		"eslint": "^8.30.0",
-		"eslint-config-prettier": "^8.5.0",
+		"eslint": "^8.31.0",
+		"eslint-config-prettier": "^8.6.0",
 		"eslint-config-standard": "^17.0.0",
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-n": "^15.6.0",
@@ -63,10 +63,10 @@
 		"mini-css-extract-plugin": "^2.7.2",
 		"postcss": "^8.4.20",
 		"prettier": "^2.8.1",
-		"sass": "^1.57.0",
+		"sass": "^1.57.1",
 		"sass-loader": "^13.2.0",
 		"style-loader": "^3.3.1",
-		"stylelint": "^14.16.0",
+		"stylelint": "^14.16.1",
 		"stylelint-config-prettier": "^9.0.4",
 		"stylelint-config-sass-guidelines": "^9.0.1",
 		"webpack": "^5.75.0",
@@ -76,5 +76,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.6"
 	},
-	"packageManager": "yarn@3.3.0"
+	"packageManager": "yarn@3.3.1"
 }
