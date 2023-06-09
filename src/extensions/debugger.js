@@ -72,7 +72,7 @@ export class Debugger extends Extension {
     return super.onDestroy(event);
   }
 
-  onUpdate(event) {
+  onUpdate() {
     this.log("colorpickerUpdate");
   }
 
@@ -92,20 +92,20 @@ export class Debugger extends Extension {
     this.log("colorpickerInvalid", event.value, event.color);
   }
 
-  onHide(event) {
+  onHide() {
     this.log("colorpickerHide");
     this.eventCounter = 0;
   }
 
-  onShow(event) {
+  onShow() {
     this.log("colorpickerShow");
   }
 
-  onDisable(event) {
+  onDisable() {
     this.log("colorpickerDisable");
   }
 
-  onEnable(event) {
+  onEnable() {
     this.log("colorpickerEnable");
   }
 }

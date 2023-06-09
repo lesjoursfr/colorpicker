@@ -174,7 +174,7 @@ class Colorpicker {
     // Emit a create event
     window.addEventListener(
       "load",
-      (event) => {
+      () => {
         /**
          * (Colorpicker) When the Colorpicker instance has been created and the DOM is ready.
          *

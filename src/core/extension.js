@@ -55,6 +55,7 @@ export class Extension {
    * @param {boolean} realColor if true, the color should resolve into a real (not named) color code
    * @return {ColorItem|String|*}
    */
+  // eslint-disable-next-line no-unused-vars
   resolveColor(color, realColor = true) {
     return false;
   }
@@ -65,6 +66,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerCreate
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onCreate(event) {
     // to be extended
   }
@@ -75,6 +77,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerDestroy
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onDestroy(event) {
     off(this.colorpicker.element, "*.colorpicker-ext");
   }
@@ -85,6 +88,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerUpdate
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onUpdate(event) {
     // to be extended
   }
@@ -95,6 +99,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerChange
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onChange(event) {
     // to be extended
   }
@@ -105,6 +110,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerInvalid
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onInvalid(event) {
     // to be extended
   }
@@ -115,6 +121,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerHide
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onHide(event) {
     // to be extended
   }
@@ -125,6 +132,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerShow
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onShow(event) {
     // to be extended
   }
@@ -135,6 +143,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerDisable
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onDisable(event) {
     // to be extended
   }
@@ -145,6 +154,7 @@ export class Extension {
    * @listens Colorpicker#colorpickerEnable
    * @param {Event} event
    */
+  // eslint-disable-next-line no-unused-vars
   onEnable(event) {
     // to be extended
   }

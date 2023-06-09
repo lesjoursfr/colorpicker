@@ -197,10 +197,9 @@ export class PopupHandler {
   /**
    * If the widget is not inside a container or inline, rearranges its position relative to its element offset.
    *
-   * @param {Event} [e]
    * @private
    */
-  reposition(e) {
+  reposition() {
     if (this.popoverTarget && this.isVisible()) {
       this.popperInstance.update();
     }
