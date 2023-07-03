@@ -52,7 +52,7 @@
 		"babel-loader": "^9.1.2",
 		"color": "^4.2.3",
 		"css-loader": "^6.8.1",
-		"eslint": "^8.43.0",
+		"eslint": "^8.44.0",
 		"eslint-config-prettier": "^8.8.0",
 		"jsdom": "^22.1.0",
 		"mini-css-extract-plugin": "^2.7.6",
@@ -70,5 +70,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@3.6.0"
+	"packageManager": "yarn@3.6.1"
 }
