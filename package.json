@@ -44,7 +44,7 @@
 		"picker"
 	],
 	"devDependencies": {
-		"@babel/core": "^7.22.20",
+		"@babel/core": "^7.23.0",
 		"@babel/preset-env": "^7.22.20",
 		"@popperjs/core": "^2.11.8",
 		"@types/color": "^3.0.4",
