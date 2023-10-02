@@ -1,9 +1,24 @@
+import { ColorItem } from ".";
+
 const dataNamespace = "colorpickerData";
+
+type ColorPickerData = {
+  [key: string]: string | ColorItem | null;
+};
+
+declare global {
+  interface Document {
+    colorpickerData: ColorPickerData;
+  }
+  interface HTMLElement {
+    colorpickerData: ColorPickerData;
+  }
+}
 
 /**
  * Convert a dashed string to camelCase
  */
-function dashedToCamel(string) {
+function dashedToCamel(string: string): string {
   return string.replace(/-([a-z])/g, (_match, letter) => letter.toUpperCase());
 }
 
@@ -12,31 +27,36 @@ function dashedToCamel(string) {
  * @param {string} template the HTML template
  * @returns {HTMLElement} the created HTMLElement
  */
-export function createFromTemplate(template) {
+export function createFromTemplate(template: string): HTMLElement {
   const range = document.createRange();
   range.selectNode(document.body);
-  return range.createContextualFragment(template).children[0];
+  return range.createContextualFragment(template).children[0] as HTMLElement;
 }
 
 /**
  * Update the given CSS property.
  * If the value is `null` the property will be removed.
- * @param {HTMLElement} node
- * @param {string} property
- * @param {string|null} value
+ * @param {HTMLElement} node the node to update
+ * @param {string|{ [key: string]: string|null }} property multi-word property names are hyphenated (kebab-case) and not camel-cased.
+ * @param {string|null} value (default to `null`)
  * @returns {HTMLElement} the element
  */
-export function updateCSS(node, property, value) {
+
+export function updateCSS(
+  node: HTMLElement,
+  property: string | { [key: string]: string | null },
+  value: string | null = null
+): HTMLElement {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return node;
   }
 
-  if (typeof property === "object") {
+  if (typeof property !== "string") {
     for (const [key, val] of Object.entries(property)) {
-      node.style[dashedToCamel(key)] = val;
+      val !== null ? node.style.setProperty(key, val) : node.style.removeProperty(key);
     }
   } else {
-    node.style[dashedToCamel(property)] = value;
+    value !== null ? node.style.setProperty(property, value) : node.style.removeProperty(property);
   }
 
   return node;
@@ -48,7 +68,7 @@ export function updateCSS(node, property, value) {
  * @param {string} attribute
  * @returns {boolean} true or false
  */
-export function hasAttribute(node, attribute) {
+export function hasAttribute(node: HTMLElement, attribute: string): boolean {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -62,7 +82,7 @@ export function hasAttribute(node, attribute) {
  * @param {string} attribute
  * @returns {string|null} the value
  */
-export function getAttribute(node, attribute) {
+export function getAttribute(node: HTMLElement, attribute: string): string | null {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return null;
   }
@@ -78,7 +98,7 @@ export function getAttribute(node, attribute) {
  * @param {string|null} value
  * @returns {HTMLElement} the element
  */
-export function setAttribute(node, attribute, value) {
+export function setAttribute(node: HTMLElement, attribute: string, value: string | null): HTMLElement {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return node;
   }
@@ -98,16 +118,19 @@ export function setAttribute(node, attribute, value) {
  * If there is no key this function return all data
  * @param {HTMLElement} node
  * @param {string|undefined} key
- * @returns {string|Object|null} the value
+ * @returns {ColorPickerData|string|ColorItem|null} the value
  */
-export function getData(node, key) {
+export function getData(node: HTMLElement, key?: string): ColorPickerData | string | ColorItem | null {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return null;
   }
 
   if (node[dataNamespace] === undefined) {
-    node[dataNamespace] = [];
+    node[dataNamespace] = {};
     for (const [k, v] of Object.entries(node.dataset)) {
+      if (v === undefined) {
+        continue;
+      }
       node[dataNamespace][dashedToCamel(k)] = v;
     }
   }
@@ -121,16 +144,16 @@ export function getData(node, key) {
  * This function does not change the DOM.
  * @param {HTMLElement} node
  * @param {string} key
- * @param {string|null} value
+ * @param {string|ColorItem|null} value
  * @returns {HTMLElement} the element
  */
-export function setData(node, key, value) {
+export function setData(node: HTMLElement, key: string, value: string | ColorItem | null): HTMLElement {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return node;
   }
 
   if (node[dataNamespace] === undefined) {
-    node[dataNamespace] = [];
+    node[dataNamespace] = {};
   }
 
   if (value === null) {
@@ -144,11 +167,11 @@ export function setData(node, key, value) {
 
 /**
  * Check if the node has the given tag name, or if its tag name is in the given list.
- * @param {Node} node the element to check
- * @param {(string|Array)} tags a tag name or a list of tag name
+ * @param {HTMLElement} node the element to check
+ * @param {string|Array<string>} tags a tag name or a list of tag name
  * @returns {boolean} true if the node has the given tag name
  */
-export function hasTagName(node, tags) {
+export function hasTagName(node: HTMLElement, tags: string | Array<string>): boolean {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -162,11 +185,11 @@ export function hasTagName(node, tags) {
 
 /**
  * Check if the node has the given class name.
- * @param {Node} node the element to check
- * @param {(string|Array)} className a class name
+ * @param {HTMLElement} node the element to check
+ * @param {string} className a class name
  * @returns {boolean} true if the node has the given class name
  */
-export function hasClass(node, className) {
+export function hasClass(node: HTMLElement, className: string): boolean {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -177,10 +200,10 @@ export function hasClass(node, className) {
 /**
  * Add the class to the node's class attribute.
  * @param {HTMLElement} node
- * @param {string|Array} className
+ * @param {string|Array<string>} className
  * @returns {HTMLElement} the element
  */
-export function addClass(node, className) {
+export function addClass(node: HTMLElement, className: string | Array<string>): HTMLElement {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return node;
   }
@@ -197,10 +220,10 @@ export function addClass(node, className) {
 /**
  * Remove the class from the node's class attribute.
  * @param {HTMLElement} node
- * @param {string} className
+ * @param {string|Array<string>} className
  * @returns {HTMLElement} the element
  */
-export function removeClass(node, className) {
+export function removeClass(node: HTMLElement, className: string | Array<string>): HTMLElement {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return node;
   }
@@ -220,7 +243,7 @@ export function removeClass(node, className) {
  * @param {string} selector
  * @returns {boolean} true or false
  */
-export function is(node, selector) {
+export function is(node: HTMLElement, selector: string): boolean {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -233,12 +256,12 @@ export function is(node, selector) {
  * @param {HTMLElement} node
  * @returns {{ top: number, left: number }} The node's offset
  */
-export function offset(node) {
+export function offset(node: HTMLElement): { top: number; left: number } {
   const rect = node.getBoundingClientRect();
-  const win = node.ownerDocument.defaultView;
+  const win = node.ownerDocument.defaultView!;
 
   return {
-    top: rect.top + win.pageYOffset,
-    left: rect.left + win.pageXOffset,
+    top: rect.top + win.scrollY,
+    left: rect.left + win.scrollX,
   };
 }

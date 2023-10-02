@@ -1,44 +1,49 @@
-import { ColorItem, getData, setData } from "../core/index.js";
+import { ColorItem, getData, setData } from "../core/index";
+import { Colorpicker } from "../colorpicker";
 
 /**
  * Handles everything related to the colorpicker color
- * @ignore
  */
 export class ColorHandler {
   /**
+   * @type {Colorpicker}
+   */
+  private _colorpicker: Colorpicker;
+
+  /**
    * @param {Colorpicker} colorpicker
    */
-  constructor(colorpicker) {
+  constructor(colorpicker: Colorpicker) {
     /**
      * @type {Colorpicker}
      */
-    this.colorpicker = colorpicker;
+    this._colorpicker = colorpicker;
   }
 
   /**
-   * @returns {*|String|ColorItem}
+   * @returns {string|ColorItem|null}
    */
-  get fallback() {
-    return this.colorpicker.options.fallbackColor
-      ? this.colorpicker.options.fallbackColor
-      : this.hasColor()
+  public get fallback(): string | ColorItem | null {
+    return this._colorpicker.options.fallbackColor
+      ? this._colorpicker.options.fallbackColor
+      : this.color instanceof ColorItem
       ? this.color
       : null;
   }
 
   /**
-   * @returns {String|null}
+   * @returns {string|null}
    */
-  get format() {
-    if (this.colorpicker.options.format) {
-      return this.colorpicker.options.format;
+  public get format(): string | null {
+    if (this._colorpicker.options.format) {
+      return this._colorpicker.options.format;
     }
 
-    if (this.hasColor() && this.color.hasTransparency() && this.color.format.match(/^hex/)) {
+    if (this.color instanceof ColorItem && this.color.hasTransparency() && this.color.format?.match(/^hex/)) {
       return this.isAlphaEnabled() ? "rgba" : "hex";
     }
 
-    if (this.hasColor()) {
+    if (this.color instanceof ColorItem) {
       return this.color.format;
     }
 
@@ -47,56 +52,52 @@ export class ColorHandler {
 
   /**
    * Internal color getter
-   *
    * @type {ColorItem|null}
    */
-  get color() {
-    return getData(this.colorpicker.element, "color");
+  public get color(): ColorItem | null {
+    return getData(this._colorpicker.element, "color") as ColorItem | null;
   }
 
   /**
    * Internal color setter
-   *
-   * @ignore
    * @param {ColorItem|null} value
    */
-  set color(value) {
-    setData(this.colorpicker.element, "color", value);
+  public set color(value: ColorItem | null) {
+    setData(this._colorpicker.element, "color", value);
 
-    if (value instanceof ColorItem && this.colorpicker.options.format === "auto") {
+    if (value instanceof ColorItem && this._colorpicker.options.format === "auto") {
       // If format is 'auto', use the first parsed one from now on
-      this.colorpicker.options.format = this.color.format;
+      this._colorpicker.options.format = value.format;
     }
   }
 
-  bind() {
+  public bind(): void {
     // if the color option is set
-    if (this.colorpicker.options.color) {
-      this.color = this.createColor(this.colorpicker.options.color);
+    if (this._colorpicker.options.color) {
+      this.color = this.createColor(this._colorpicker.options.color);
       return;
     }
 
     // if element[color] is empty and the input has a value
-    if (!this.color && !!this.colorpicker.inputHandler.getValue()) {
+    if (!this.color && !!this._colorpicker.inputHandler.getValue()) {
       this.color = this.createColor(
-        this.colorpicker.inputHandler.getValue(),
-        this.colorpicker.options.autoInputFallback
+        this._colorpicker.inputHandler.getValue() as string,
+        this._colorpicker.options.autoInputFallback
       );
     }
   }
 
-  unbind() {
-    setData(this.colorpicker.element, "color", null);
+  public unbind(): void {
+    setData(this._colorpicker.element, "color", null);
   }
 
   /**
    * Returns the color string from the input value or the 'data-color' attribute of the input or element.
    * If empty, it returns the defaultValue parameter.
-   *
-   * @returns {String|*}
+   * @returns {string}
    */
-  getColorString() {
-    if (!this.hasColor()) {
+  public getColorString(): string {
+    if (!(this.color instanceof ColorItem)) {
       return "";
     }
 
@@ -105,10 +106,9 @@ export class ColorHandler {
 
   /**
    * Sets the color value
-   *
-   * @param {String|ColorItem} val
+   * @param {string|ColorItem} val
    */
-  setColorString(val) {
+  public setColorString(val: string | ColorItem): void {
     const color = val ? this.createColor(val) : null;
 
     this.color = color || null;
@@ -116,14 +116,17 @@ export class ColorHandler {
 
   /**
    * Creates a new color using the widget instance options (fallbackColor, format).
-   *
    * @fires Colorpicker#colorpickerInvalid
-   * @param {*} val
+   * @param {string|ColorItem} val
    * @param {boolean} fallbackOnInvalid
    * @param {boolean} autoHexInputFallback
    * @returns {ColorItem}
    */
-  createColor(val, fallbackOnInvalid = true, autoHexInputFallback = false) {
+  public createColor(
+    val: string | ColorItem,
+    fallbackOnInvalid: boolean = true,
+    autoHexInputFallback: boolean = false
+  ): ColorItem {
     const disableHexInputFallback = !fallbackOnInvalid && !autoHexInputFallback;
 
     let color = new ColorItem(this.resolveColorDelegate(val), this.format, disableHexInputFallback);
@@ -135,10 +138,9 @@ export class ColorHandler {
 
       /**
        * (Colorpicker) Fired when the color is invalid and the fallback color is going to be used.
-       *
        * @event Colorpicker#colorpickerInvalid
        */
-      this.colorpicker.trigger("colorpickerInvalid", color, val);
+      this._colorpicker.trigger("colorpickerInvalid", color, val instanceof ColorItem ? val.string(this.format) : val);
     }
 
     if (!this.isAlphaEnabled()) {
@@ -149,12 +151,12 @@ export class ColorHandler {
     return color;
   }
 
-  getFallbackColor() {
+  public getFallbackColor(): ColorItem {
     if (this.fallback && this.fallback === this.color) {
       return this.color;
     }
 
-    const fallback = this.resolveColorDelegate(this.fallback);
+    const fallback = this.fallback !== null ? this.resolveColorDelegate(this.fallback) : null;
 
     const color = new ColorItem(fallback, this.format);
 
@@ -169,8 +171,8 @@ export class ColorHandler {
   /**
    * @returns {ColorItem}
    */
-  assureColor() {
-    if (!this.hasColor()) {
+  public assureColor(): ColorItem {
+    if (!(this.color instanceof ColorItem)) {
       this.color = this.getFallbackColor();
     }
 
@@ -179,20 +181,20 @@ export class ColorHandler {
 
   /**
    * Delegates the color resolution to the colorpicker extensions.
-   *
-   * @param {String|*} color
+   * @param {string|ColorItem} color
    * @param {boolean} realColor if true, the color should resolve into a real (not named) color code
-   * @returns {ColorItem|String|*|null}
+   * @returns {string}
    */
-  resolveColorDelegate(color, realColor = true) {
-    let extResolvedColor = false;
+  public resolveColorDelegate(color: string | ColorItem, realColor: boolean = true): string {
+    color = color instanceof ColorItem ? color.string(this.format) : color;
+    let extResolvedColor: ColorItem | string | false = false;
 
-    for (const ext of this.colorpicker.extensions) {
+    for (const ext of this._colorpicker.extensions) {
+      extResolvedColor = ext.resolveColor(color, realColor);
       if (extResolvedColor !== false) {
         // skip if resolved
-        return;
+        break;
       }
-      extResolvedColor = ext.resolveColor(color, realColor);
     }
 
     return extResolvedColor || color;
@@ -202,23 +204,23 @@ export class ColorHandler {
    * Checks if there is a color object, that it is valid and it is not a fallback
    * @returns {boolean}
    */
-  isInvalidColor() {
-    return !this.hasColor() || !this.color.isValid();
+  public isInvalidColor(): boolean {
+    return !(this.color instanceof ColorItem) || !this.color.isValid();
   }
 
   /**
    * Returns true if the useAlpha option is exactly true, false otherwise
    * @returns {boolean}
    */
-  isAlphaEnabled() {
-    return this.colorpicker.options.useAlpha !== false;
+  public isAlphaEnabled(): boolean {
+    return this._colorpicker.options.useAlpha !== false;
   }
 
   /**
    * Returns true if the current color object is an instance of Color, false otherwise.
    * @returns {boolean}
    */
-  hasColor() {
+  public hasColor(): boolean {
     return this.color instanceof ColorItem;
   }
 }
