@@ -19,7 +19,8 @@
 		"last 3 versions",
 		"not dead"
 	],
-	"main": "dist/index.js",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"type": "module",
 	"scripts": {
 		"freshlock": "rm -rf node_modules/ && rm .yarn/install-state.gz && rm -r .yarn/cache/ && rm yarn.lock && yarn",
