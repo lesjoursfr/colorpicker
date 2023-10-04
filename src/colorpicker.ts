@@ -15,6 +15,12 @@ import {
   trigger,
 } from "./core/index";
 
+declare global {
+  interface HTMLElement {
+    colorpicker?: Colorpicker;
+  }
+}
+
 let colorPickerIdCounter = 0;
 
 const root = (typeof self !== "undefined" ? self : this) as Window; // window
@@ -195,6 +201,9 @@ export class Colorpicker {
       },
       { once: true }
     );
+
+    // Add the Colorpicker instance to the DOM
+    this.element.colorpicker = this;
   }
 
   /**
