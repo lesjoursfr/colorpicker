@@ -1,5 +1,5 @@
-import { ColorpickerEvent, Extension, createFromTemplate, updateCSS } from "../core/index";
-import { Colorpicker } from "../colorpicker";
+import { ColorpickerEvent, Extension, createFromTemplate, updateCSS } from "../core/index.js";
+import { Colorpicker } from "../index.js";
 
 export type PreviewOptions = {
   template: string;

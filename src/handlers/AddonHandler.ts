@@ -1,5 +1,5 @@
-import { updateCSS, off } from "../core/index";
-import { Colorpicker } from "../colorpicker";
+import { updateCSS, off } from "../core/index.js";
+import { Colorpicker } from "../index.js";
 
 /**
  * Handles everything related to the colorpicker addon

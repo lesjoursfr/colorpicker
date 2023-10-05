@@ -1,4 +1,4 @@
-import { ColorItem } from "./core";
+import { ColorItem } from "./core/index.js";
 
 // adjust these values accordingly to the sass vars
 const sassVars = {

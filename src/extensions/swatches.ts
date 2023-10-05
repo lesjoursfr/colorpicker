@@ -1,6 +1,6 @@
-import { createFromTemplate, getAttribute, setAttribute, updateCSS, on, ColorpickerEvent } from "../core/index";
-import { Colorpicker } from "../colorpicker";
-import { Palette, PaletteOptions } from "./palette";
+import { createFromTemplate, getAttribute, setAttribute, updateCSS, on, ColorpickerEvent } from "../core/index.js";
+import { Colorpicker } from "../index.js";
+import { Palette, PaletteOptions } from "./palette.js";
 
 export type SwatchesOptions = PaletteOptions & { barTemplate: string; swatchTemplate: string };
 

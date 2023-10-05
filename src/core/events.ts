@@ -1,5 +1,5 @@
-import { Colorpicker } from "../colorpicker";
-import { ColorItem } from "./color-item";
+import { Colorpicker } from "../index.js";
+import { ColorItem } from "./color-item.js";
 
 const eventsNamespace = "colorpickerEvents";
 let eventsGuid = 0;

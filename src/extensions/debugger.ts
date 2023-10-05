@@ -1,5 +1,5 @@
-import { Extension, on, off, trigger, ColorpickerEvent } from "../core/index";
-import { Colorpicker } from "../colorpicker";
+import { Extension, on, off, trigger, ColorpickerEvent } from "../core/index.js";
+import { Colorpicker } from "../index.js";
 
 /**
  * Debugger extension class

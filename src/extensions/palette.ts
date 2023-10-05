@@ -1,5 +1,5 @@
-import { Extension } from "../core/index";
-import { Colorpicker } from "../colorpicker";
+import { Extension } from "../core/index.js";
+import { Colorpicker } from "../index.js";
 
 export type PaletteColorsOption = { [key: string]: string } | Array<string>;
 

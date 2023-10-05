@@ -1,5 +1,5 @@
-import { ColorItem, getData, setData } from "../core/index";
-import { Colorpicker } from "../colorpicker";
+import { ColorItem, getData, setData } from "../core/index.js";
+import { Colorpicker } from "../index.js";
 
 /**
  * Handles everything related to the colorpicker color

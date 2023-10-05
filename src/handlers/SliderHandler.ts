@@ -1,6 +1,11 @@
-import { is, offset, on, off, ColorItem, isTouchEvent } from "../core/index";
-import { Colorpicker } from "../colorpicker";
-import { SlidersAlphaOption, SlidersHueOption, SlidersOptions, SlidersSaturationOption } from "../colorpicker-options";
+import { is, offset, on, off, ColorItem, isTouchEvent } from "../core/index.js";
+import {
+  SlidersAlphaOption,
+  SlidersHueOption,
+  SlidersOptions,
+  SlidersSaturationOption,
+} from "../colorpicker-options.js";
+import { Colorpicker } from "../index.js";
 
 type Slider = (SlidersSaturationOption | SlidersHueOption | SlidersAlphaOption) & {
   guideStyle: CSSStyleDeclaration;

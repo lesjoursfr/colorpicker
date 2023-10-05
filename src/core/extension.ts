@@ -1,5 +1,5 @@
-import { Colorpicker } from "../colorpicker";
-import { on, off, ColorpickerEvent } from "./events";
+import { Colorpicker } from "../index.js";
+import { on, off, ColorpickerEvent } from "./events.js";
 
 /**
  * Colorpicker extension class.

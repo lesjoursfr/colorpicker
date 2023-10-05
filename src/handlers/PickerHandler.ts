@@ -1,6 +1,6 @@
-import { createFromTemplate, addClass, updateCSS, ColorItem } from "../core/index";
-import { Colorpicker } from "../colorpicker";
-import { ColorpickerOptions } from "../colorpicker-options";
+import { createFromTemplate, addClass, updateCSS, ColorItem } from "../core/index.js";
+import { ColorpickerOptions } from "../colorpicker-options.js";
+import { Colorpicker } from "../index.js";
 
 /**
  * Handles everything related to the colorpicker UI

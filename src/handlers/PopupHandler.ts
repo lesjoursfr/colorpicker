@@ -1,7 +1,7 @@
 import { createPopper } from "@popperjs/core";
-import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTemplate } from "../core/index";
-import { DefaultOptions } from "../colorpicker-options";
-import { Colorpicker } from "../colorpicker";
+import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTemplate } from "../core/index.js";
+import { DefaultOptions } from "../colorpicker-options.js";
+import { Colorpicker } from "../index.js";
 
 const defaults = {
   popoverTemplate: `<div class="colorpicker-popover"><div class="colorpicker-popover-arrow"></div><div class="colorpicker-popover-body"></div></div>`,

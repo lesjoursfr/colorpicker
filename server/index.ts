@@ -1,3 +1,3 @@
 import "../src/css/colorpicker.scss";
 
-export * from "../src/colorpicker";
+export * from "../src/index";

@@ -19,9 +19,11 @@
 		"last 3 versions",
 		"not dead"
 	],
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
 	"type": "module",
+	"exports": {
+		"types": "./dist/index.d.ts",
+		"default": "./dist/index.js"
+	},
 	"scripts": {
 		"freshlock": "rm -rf node_modules/ && rm .yarn/install-state.gz && rm -r .yarn/cache/ && rm yarn.lock && yarn",
 		"eslint-check": "eslint . --ext .js,.jsx,.ts,.tsx",

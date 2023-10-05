@@ -1,4 +1,4 @@
-import { ColorItem } from ".";
+import { ColorItem } from "./color-item.js";
 
 const dataNamespace = "colorpickerData";
 
