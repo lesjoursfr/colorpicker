@@ -105,7 +105,7 @@ export class Colorpicker {
    * @param {ColorpickerOptions} options
    * @constructor
    */
-  constructor(element: HTMLElement, options: ColorpickerOptions) {
+  constructor(element: HTMLElement, options: Partial<ColorpickerOptions>) {
     colorPickerIdCounter += 1;
     /**
      * The colorpicker instance number
