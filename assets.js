@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import { resolve } from "path";
-import tsConfig from "./tsconfig.json" assert { type: "json" };
+
+const tsConfig = fs.readJSONSync(resolve("./tsconfig.json"));
 
 const rootDir = resolve(tsConfig.compilerOptions.rootDir);
 const outDir = resolve(tsConfig.compilerOptions.outDir);
