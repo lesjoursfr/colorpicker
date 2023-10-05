@@ -1,5 +1,3 @@
-import "../src/css/colorpicker.scss";
-
 import { DefaultOptions, ColorpickerOptions } from "./colorpicker-options";
 import * as coreExtensions from "./extensions/index";
 import { SliderHandler, PopupHandler, InputHandler, ColorHandler, PickerHandler, AddonHandler } from "./handlers/index";
