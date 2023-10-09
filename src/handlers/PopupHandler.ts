@@ -179,8 +179,13 @@ export class PopupHandler {
 
     const popoverTip = createFromTemplate(defaults.popoverTemplate);
     popoverTip.querySelector<HTMLElement>(".colorpicker-popover-body")?.append(cp.picker);
-    this._colorpicker.element.appendChild(popoverTip);
     this._popoverTip = popoverTip;
+
+    if (this._hasInput) {
+      this._input.after(popoverTip);
+    } else {
+      this._colorpicker.element.appendChild(popoverTip);
+    }
   }
 
   public getPopperConfig(): object {
