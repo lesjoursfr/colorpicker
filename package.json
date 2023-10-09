@@ -67,7 +67,7 @@
 		"mocha": "^10.2.0",
 		"postcss": "^8.4.31",
 		"prettier": "^3.0.3",
-		"sass": "^1.68.0",
+		"sass": "^1.69.0",
 		"sass-loader": "^13.3.2",
 		"stylelint": "^15.10.3",
 		"stylelint-config-sass-guidelines": "^10.0.0",
@@ -82,5 +82,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@3.6.3"
+	"packageManager": "yarn@3.6.4"
 }
