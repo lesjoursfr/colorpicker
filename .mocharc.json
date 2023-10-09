@@ -1,0 +1,5 @@
+{
+	"extension": ["ts"],
+	"spec": "tests/**/*.spec.ts",
+	"require": "./tests/setup/browser-env.ts"
+}

@@ -1,17 +1,52 @@
+import { Colorpicker } from "../index.js";
+import { ColorItem } from "./color-item.js";
+
 const eventsNamespace = "colorpickerEvents";
 let eventsGuid = 0;
 
-class ColorpickerEvent extends Event {
-  constructor(event, colorpicker, color, value, extras) {
+type ColorPickerEventExtra = { [key: string]: unknown };
+
+type ColorPickerEvent = { type: string; ns: Array<string> | null; handler: EventListenerOrEventListenerObject };
+
+type ColorPickerEvents = {
+  [key: string]: ColorPickerEvent;
+};
+
+declare global {
+  interface Window {
+    colorpickerEvents: ColorPickerEvents;
+  }
+  interface Document {
+    colorpickerEvents: ColorPickerEvents;
+  }
+  interface HTMLElement {
+    colorpickerEvents: ColorPickerEvents;
+  }
+}
+
+export class ColorpickerEvent extends Event {
+  public colorpicker: Colorpicker;
+  public color: ColorItem | null;
+  public value: string | null;
+  public extras: ColorPickerEventExtra;
+
+  constructor(
+    event: string,
+    colorpicker: Colorpicker,
+    color: ColorItem | null,
+    value: string | null,
+    extras?: ColorPickerEventExtra
+  ) {
     super(event);
     this.colorpicker = colorpicker;
     this.color = color;
     this.value = value;
 
-    if (typeof extras === "object") {
+    this.extras = {};
+    if (extras !== undefined) {
       for (const [k, v] of Object.entries(extras)) {
         if (!["type", "type", "type", "type"].includes(k)) {
-          this[k] = v;
+          this.extras[k] = v;
         }
       }
     }
@@ -22,7 +57,7 @@ class ColorpickerEvent extends Event {
  * Parse an event type to separate the type & the namespace
  * @param {string} string
  */
-function parseEventType(string) {
+function parseEventType(string: string): Omit<ColorPickerEvent, "handler"> {
   const [type, ...nsArray] = string.split(".");
   return {
     type,
@@ -32,11 +67,15 @@ function parseEventType(string) {
 
 /**
  * Set an event listener on the node.
- * @param {HTMLElement} node
+ * @param {Window|Document|HTMLElement} node
  * @param {string} events
  * @param {Function} handler
  */
-function addEventListener(node, events, handler) {
+function addEventListener(
+  node: Window | Document | HTMLElement,
+  events: string,
+  handler: EventListenerOrEventListenerObject
+): void {
   if (!(node instanceof EventTarget)) {
     return;
   }
@@ -55,11 +94,15 @@ function addEventListener(node, events, handler) {
 
 /**
  * Remove event listeners from the node.
- * @param {HTMLElement} node
+ * @param {Window|Document|HTMLElement} node
  * @param {string} events
  * @param {Function|undefined} handler
  */
-function removeEventListener(node, events, handler) {
+function removeEventListener(
+  node: Window | Document | HTMLElement,
+  events: string,
+  handler?: EventListenerOrEventListenerObject
+): void {
   if (!(node instanceof EventTarget)) {
     return;
   }
@@ -77,7 +120,7 @@ function removeEventListener(node, events, handler) {
       }
 
       if (
-        (ns === null || handlerObj.ns.includes(ns[0])) &&
+        (ns === null || handlerObj.ns?.includes(ns[0])) &&
         (handler === undefined || (typeof handler === "function" && handler === handlerObj.handler))
       ) {
         delete node[eventsNamespace][guid];
@@ -89,11 +132,15 @@ function removeEventListener(node, events, handler) {
 
 /**
  * Set an event listener on every node.
- * @param {HTMLElement|NodeList} nodes
+ * @param {Window|Document|HTMLElement|NodeList} nodes
  * @param {string} events
  * @param {Function} handler
  */
-export function on(nodes, events, handler) {
+export function on(
+  nodes: Window | Document | HTMLElement | NodeListOf<HTMLElement>,
+  events: string,
+  handler: EventListenerOrEventListenerObject
+): void {
   if (nodes instanceof NodeList) {
     for (const node of nodes) {
       addEventListener(node, events, handler);
@@ -105,11 +152,15 @@ export function on(nodes, events, handler) {
 
 /**
  * Remove event listeners from the node.
- * @param {HTMLElement|NodeList} node
+ * @param {Window|Document|HTMLElement|NodeList} node
  * @param {string} events
  * @param {Function|undefined} handler
  */
-export function off(nodes, events, handler) {
+export function off(
+  nodes: Window | Document | HTMLElement | NodeListOf<HTMLElement>,
+  events: string,
+  handler?: EventListenerOrEventListenerObject
+): void {
   if (nodes instanceof NodeList) {
     for (const node of nodes) {
       removeEventListener(node, events, handler);
@@ -121,17 +172,28 @@ export function off(nodes, events, handler) {
 
 /**
  * Trigger the ColorpickerEvent on the node.
- * @param {HTMLElement} node
+ * @param {Window|Document|HTMLElement} node
  * @param {string} event
  * @param {Colorpicker} colorpicker
- * @param {Color|null} color
+ * @param {ColorItem|null} color
  * @param {string|null} value
- * @param extras
+ * @param {ColorPickerEventExtra|undefined} extras
  */
-export function trigger(node, event, colorpicker, color, value, extras) {
+export function trigger(
+  node: Window | Document | HTMLElement,
+  event: string,
+  colorpicker: Colorpicker,
+  color: ColorItem | null,
+  value: string | null,
+  extras?: ColorPickerEventExtra
+): void {
   if (!(node instanceof EventTarget)) {
     return;
   }
 
   node.dispatchEvent(new ColorpickerEvent(event, colorpicker, color, value, extras));
+}
+
+export function isTouchEvent(e: Event): e is TouchEvent {
+  return window.TouchEvent && e instanceof TouchEvent;
 }

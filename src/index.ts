@@ -1,6 +1,4 @@
-"use strict";
-
-import defaults from "./options.js";
+import { DefaultOptions, ColorpickerOptions } from "./colorpicker-options.js";
 import * as coreExtensions from "./extensions/index.js";
 import {
   SliderHandler,
@@ -22,68 +20,97 @@ import {
   trigger,
 } from "./core/index.js";
 
+declare global {
+  interface HTMLElement {
+    colorpicker?: Colorpicker;
+  }
+}
+
 let colorPickerIdCounter = 0;
 
-const root = typeof self !== "undefined" ? self : this; // window
+const root = (typeof self !== "undefined" ? self : this) as Window; // window
+
+export type ColorpickerLastEvent = {
+  alias: string | null;
+  e: Event | null;
+};
 
 /**
  * Colorpicker widget class
  */
-class Colorpicker {
+export class Colorpicker {
+  public id: number;
+  public lastEvent: ColorpickerLastEvent;
+  public element: HTMLElement;
+  public options: ColorpickerOptions;
+  public extensions: Extension<object>[];
+  public container: HTMLElement | false;
+  public inputHandler: InputHandler;
+  public colorHandler: ColorHandler;
+  public sliderHandler: SliderHandler;
+  public popupHandler: PopupHandler;
+  public pickerHandler: PickerHandler;
+  public addonHandler: AddonHandler;
+  private disabled: boolean;
+
+  /**
+   * Colorpicker extension classes, indexed by extension name
+   * @type {Object} a map between the extension name and its class
+   */
+  public static extensions: { [key: string]: typeof Extension<object> } = {
+    debugger: coreExtensions.Debugger,
+    palette: coreExtensions.Palette,
+    preview: coreExtensions.Preview,
+    swatches: coreExtensions.Swatches,
+  };
+
   /**
    * Color class
-   *
-   * @static
-   * @type {Color}
+   * @type {ColorItem}
    */
-  static get Color() {
+  public static get Color(): typeof ColorItem {
     return ColorItem;
   }
 
   /**
    * Extension class
-   *
-   * @static
    * @type {Extension}
    */
-  static get Extension() {
+  public static get Extension(): typeof Extension {
     return Extension;
   }
 
   /**
    * Internal color object
-   *
-   * @type {Color|null}
+   * @type {ColorItem | null}
    */
-  get color() {
+  public get color(): ColorItem | null {
     return this.colorHandler.color;
   }
 
   /**
    * Internal color format
-   *
-   * @type {String|null}
+   * @type {string|null}
    */
-  get format() {
+  public get format(): string | null {
     return this.colorHandler.format;
   }
 
   /**
    * Getter of the picker element
-   *
    * @returns {HTMLElement}
    */
-  get picker() {
+  public get picker(): HTMLElement {
     return this.pickerHandler.picker;
   }
 
   /**
    * @fires Colorpicker#colorpickerCreate
-   * @param {Object|String} element
-   * @param {Object} options
+   * @param {HTMLElement} element
+   * @param {ColorpickerOptions} options
    * @constructor
    */
-  constructor(element, options) {
+  constructor(element: HTMLElement, options: Partial<ColorpickerOptions>) {
     colorPickerIdCounter += 1;
     /**
      * The colorpicker instance number
@@ -93,8 +120,7 @@ class Colorpicker {
 
     /**
      * Latest colorpicker event
-     *
-     * @type {{name: String, e: *}}
+     * @type {{name: string, e: *}}
      */
     this.lastEvent = {
       alias: null,
@@ -103,46 +129,43 @@ class Colorpicker {
 
     /**
      * The element that the colorpicker is bound to
-     *
      * @type {HTMLElement}
      */
     this.element = element;
     addClass(this.element, "colorpicker-element");
-    setAttribute(this.element, "data-colorpicker-id", this.id);
+    setAttribute(this.element, "data-colorpicker-id", this.id.toString());
 
     /**
      * @type {defaults}
      */
     this.options = Object.assign(
       {},
-      structuredClone(defaults),
+      structuredClone(DefaultOptions),
       structuredClone(options),
-      structuredClone(getData(this.element))
+      structuredClone(getData(this.element) as unknown)
     );
 
     /**
      * @type {boolean}
-     * @private
      */
     this.disabled = false;
 
     /**
      * Extensions added to this instance
-     *
      * @type {Extension[]}
      */
     this.extensions = [];
 
     /**
      * The element where the
-     * @type {*|HTMLElement}
+     * @type {HTMLElement|false}
      */
     this.container =
-      this.options.container === true || (this.options.container !== true && this.options.inline === true)
+      this.options.container === true || this.options.inline === true
         ? this.element
-        : this.options.container;
-
-    this.container = this.container !== false ? this.container : false;
+        : this.options.container !== false
+        ? root.document.querySelector<HTMLElement>(this.options.container)!
+        : false;
 
     /**
      * @type {InputHandler}
@@ -177,20 +200,21 @@ class Colorpicker {
       () => {
         /**
          * (Colorpicker) When the Colorpicker instance has been created and the DOM is ready.
-         *
          * @event Colorpicker#colorpickerCreate
          */
         this.trigger("colorpickerCreate");
       },
       { once: true }
     );
+
+    // Add the Colorpicker instance to the DOM
+    this.element.colorpicker = this;
   }
 
   /**
    * Initializes the plugin
-   * @private
    */
-  init() {
+  private init(): void {
     // Init addon
     this.addonHandler.bind();
 
@@ -223,9 +247,8 @@ class Colorpicker {
 
   /**
    * Initializes the plugin extensions
-   * @private
    */
-  initExtensions() {
+  private initExtensions(): void {
     if (!Array.isArray(this.options.extensions)) {
       this.options.extensions = [];
     }
@@ -242,12 +265,11 @@ class Colorpicker {
 
   /**
    * Creates and registers the given extension
-   *
    * @param {Extension} ExtensionClass The extension class to instantiate
    * @param {Object} [config] Extension configuration
    * @returns {Extension}
    */
-  registerExtension(ExtensionClass, config = {}) {
+  public registerExtension(ExtensionClass: typeof Extension<object>, config: unknown = {}): Extension<object> {
     const ext = new ExtensionClass(this, config);
 
     this.extensions.push(ext);
@@ -256,10 +278,9 @@ class Colorpicker {
 
   /**
    * Destroys the current instance
-   *
    * @fires Colorpicker#colorpickerDestroy
    */
-  destroy() {
+  public destroy(): void {
     const color = this.color;
 
     this.sliderHandler.unbind();
@@ -276,7 +297,6 @@ class Colorpicker {
 
     /**
      * (Colorpicker) When the instance is destroyed with all events unbound.
-     *
      * @event Colorpicker#colorpickerDestroy
      */
     this.trigger("colorpickerDestroy", color);
@@ -285,43 +305,39 @@ class Colorpicker {
   /**
    * Shows the colorpicker widget if hidden.
    * If the colorpicker is disabled this call will be ignored.
-   *
    * @fires Colorpicker#colorpickerShow
    * @param {Event} [e]
    */
-  show(e) {
+  public show(e: Event): void {
     this.popupHandler.show(e);
   }
 
   /**
    * Hides the colorpicker widget.
-   *
    * @fires Colorpicker#colorpickerHide
    * @param {Event} [e]
    */
-  hide(e) {
+  public hide(e: Event): void {
     this.popupHandler.hide(e);
   }
 
   /**
    * Toggles the colorpicker between visible and hidden.
-   *
    * @fires Colorpicker#colorpickerShow
    * @fires Colorpicker#colorpickerHide
    * @param {Event} [e]
    */
-  toggle(e) {
+  public toggle(e: Event): void {
     this.popupHandler.toggle(e);
   }
 
   /**
    * Returns the current color value as string
-   *
-   * @param {String|*} [defaultValue]
-   * @returns {String|*}
+   * @param {string|ColorItem|null} [defaultValue]
+   * @returns {string}
    */
-  getValue(defaultValue = null) {
-    let val = this.colorHandler.color;
+  public getValue(defaultValue: string | ColorItem | null = null): string | null {
+    let val: string | ColorItem | null = this.colorHandler.color;
 
     val = val instanceof ColorItem ? val : defaultValue;
 
@@ -334,17 +350,16 @@ class Colorpicker {
 
   /**
    * Sets the color manually
-   *
    * @fires Colorpicker#colorpickerChange
-   * @param {String|Color} val
+   * @param {string|ColorItem} val
    */
-  setValue(val) {
+  public setValue(val: string | ColorItem): void {
     if (this.isDisabled()) {
       return;
     }
     const ch = this.colorHandler;
 
-    if ((ch.hasColor() && !!val && ch.color.equals(val)) || (!ch.hasColor() && !val)) {
+    if ((ch.hasColor() && ch.color!.equals(val)) || (!ch.hasColor() && !val)) {
       // same color or still empty
       return;
     }
@@ -353,10 +368,9 @@ class Colorpicker {
 
     /**
      * (Colorpicker) When the color is set programmatically with setValue().
-     *
      * @event Colorpicker#colorpickerChange
      */
-    this.trigger("colorpickerChange", ch.color, val);
+    this.trigger("colorpickerChange", ch.color, val instanceof ColorItem ? val.string() : val);
 
     // force update if color has changed to empty
     this.update();
@@ -364,10 +378,9 @@ class Colorpicker {
 
   /**
    * Updates the UI and the input color according to the internal color.
-   *
    * @fires Colorpicker#colorpickerUpdate
    */
-  update() {
+  public update(): void {
     if (this.colorHandler.hasColor()) {
       this.inputHandler.update();
     } else {
@@ -379,7 +392,6 @@ class Colorpicker {
 
     /**
      * (Colorpicker) Fired when the widget is updated.
-     *
      * @event Colorpicker#colorpickerUpdate
      */
     this.trigger("colorpickerUpdate");
@@ -387,18 +399,16 @@ class Colorpicker {
 
   /**
    * Enables the widget and the input if any
-   *
    * @fires Colorpicker#colorpickerEnable
    * @returns {boolean}
    */
-  enable() {
+  public enable(): boolean {
     this.inputHandler.enable();
     this.disabled = false;
     removeClass(this.picker, "colorpicker-disabled");
 
     /**
      * (Colorpicker) When the widget has been enabled.
-     *
      * @event Colorpicker#colorpickerEnable
      */
     this.trigger("colorpickerEnable");
@@ -407,18 +417,16 @@ class Colorpicker {
 
   /**
    * Disables the widget and the input if any
-   *
    * @fires Colorpicker#colorpickerDisable
    * @returns {boolean}
    */
-  disable() {
+  public disable(): boolean {
     this.inputHandler.disable();
     this.disabled = true;
     addClass(this.picker, "colorpicker-disabled");
 
     /**
      * (Colorpicker) When the widget has been disabled.
-     *
      * @event Colorpicker#colorpickerDisable
      */
     this.trigger("colorpickerDisable");
@@ -429,7 +437,7 @@ class Colorpicker {
    * Returns true if this instance is enabled
    * @returns {boolean}
    */
-  isEnabled() {
+  public isEnabled(): boolean {
     return !this.isDisabled();
   }
 
@@ -437,33 +445,17 @@ class Colorpicker {
    * Returns true if this instance is disabled
    * @returns {boolean}
    */
-  isDisabled() {
+  public isDisabled(): boolean {
     return this.disabled === true;
   }
 
   /**
    * Triggers a Colorpicker event.
-   *
-   * @param eventName
-   * @param color
-   * @param value
+   * @param {string}eventName
+   * @param  {ColorItem|null} color
+   * @param  {string|null} value
    */
-  trigger(eventName, color = null, value = null) {
+  public trigger(eventName: string, color: ColorItem | null = null, value: string | null = null): void {
     trigger(this.element, eventName, this, color || this.color, value || this.getValue());
   }
 }
-
-/**
- * Colorpicker extension classes, indexed by extension name
- *
- * @static
- * @type {Object} a map between the extension name and its class
- */
-Colorpicker.extensions = {
-  debugger: coreExtensions.Debugger,
-  palette: coreExtensions.Palette,
-  preview: coreExtensions.Preview,
-  swatches: coreExtensions.Swatches,
-};
-
-export { Colorpicker };

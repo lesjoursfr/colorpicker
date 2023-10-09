@@ -1,3 +1,5 @@
+import { ColorItem } from "./core/index.js";
+
 // adjust these values accordingly to the sass vars
 const sassVars = {
   bar_size_short: 16,
@@ -7,21 +9,81 @@ const sassVars = {
 
 const sliderSize = sassVars.bar_size_short * sassVars.columns + sassVars.base_margin * (sassVars.columns - 1);
 
+export type ExtensionsOptionItem = {
+  name: string;
+  options?: unknown;
+};
+
+export type SlidersColorItemMethods = "setHueRatio" | "setSaturationRatio" | "setValueRatio" | "setAlphaRatio";
+
+export type SlidersSaturationOption = {
+  selector: string;
+  maxLeft: number;
+  maxTop: number;
+  callLeft: SlidersColorItemMethods | false;
+  callTop: SlidersColorItemMethods | false;
+};
+
+export type SlidersHueOption = {
+  selector: string;
+  maxLeft: number;
+  maxTop: number;
+  callLeft: SlidersColorItemMethods | false;
+  callTop: SlidersColorItemMethods | false;
+};
+
+export type SlidersAlphaOption = {
+  selector: string;
+  childSelector: string;
+  maxLeft: number;
+  maxTop: number;
+  callLeft: SlidersColorItemMethods | false;
+  callTop: SlidersColorItemMethods | false;
+};
+
+export type SlidersOptions = {
+  saturation: SlidersSaturationOption;
+  hue: SlidersHueOption;
+  alpha: SlidersAlphaOption;
+};
+
+export type ColorpickerOptions = {
+  customClass: string | null;
+  color: string | ColorItem | false;
+  fallbackColor: string | ColorItem | false;
+  format: "rgb" | "hex" | "hsl" | "auto" | null;
+  horizontal: boolean;
+  inline: boolean;
+  container: string | boolean;
+  popover: false | object;
+  debug: boolean;
+  input: string;
+  addon: string;
+  autoInputFallback: boolean;
+  autoHexInputFallback: boolean;
+  useHashPrefix: boolean;
+  useAlpha: boolean;
+  template: string;
+  extensions: Array<ExtensionsOptionItem>;
+  sliders: SlidersOptions;
+  slidersHorz: SlidersOptions;
+};
+
 /**
  * Colorpicker default options
  */
-export default {
+export const DefaultOptions: ColorpickerOptions = {
   /**
    * Custom class to be added to the `.colorpicker-element` element
    *
-   * @type {String|null}
+   * @type {string|null}
    * @default null
    */
   customClass: null,
   /**
    * Sets a initial color, ignoring the one from the element/input value or the data-color attribute.
    *
-   * @type {(String|ColorItem|boolean)}
+   * @type {(string|ColorItem|false)}
    * @default false
    */
   color: false,
@@ -29,7 +91,7 @@ export default {
    * Fallback color to use when the given color is invalid.
    * If false, the latest valid color will be used as a fallback.
    *
-   * @type {String|ColorItem|boolean}
+   * @type {string|ColorItem|false}
    * @default false
    */
   fallbackColor: false,
@@ -71,15 +133,15 @@ export default {
    * If false, the document body is used as the container, unless it is a popover (in this case it is appended to the
    * popover body instead).
    *
-   * @type {String|boolean}
+   * @type {string|boolean}
    * @default false
    */
   container: false,
   /**
-   * Bootstrap Popover options.
+   * Popover options.
    * The trigger, content and html options are always ignored.
    *
-   * @type {boolean}
+   * @type {object}
    * @default Object
    */
   popover: {
@@ -110,7 +172,7 @@ export default {
   /**
    * Child CSS selector for the colorpicker input.
    *
-   * @type {String}
+   * @type {string}
    * @default 'input'
    */
   input: "input",
@@ -118,7 +180,7 @@ export default {
    * Child CSS selector for the colorpicker addon.
    * If it exists, the child <i> element background will be changed on color change.
    *
-   * @type {String}
+   * @type {string}
    * @default '.colorpicker-trigger, .colorpicker-input-addon'
    */
   addon: ".colorpicker-input-addon",
@@ -167,7 +229,7 @@ export default {
   useAlpha: true,
   /**
    * Colorpicker widget template
-   * @type {String}
+   * @type {string}
    * @example
    * <!-- This is the default template: -->
    * <div class="colorpicker">

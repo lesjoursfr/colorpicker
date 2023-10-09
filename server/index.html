@@ -27,22 +27,33 @@
 					{
 						name: "debugger",
 					},
+				],
+			});
+		</script>
+
+		<h3>without alpha</h3>
+		<div class="js-color-picker-2">
+			<span class="colorpicker-input-addon"><i></i></span>
+			<input type="text" class="form-control" name="main" required />
+		</div>
+		<script type="text/javascript">
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-2"), {
+				color: "#C83E2C",
+				useAlpha: false,
+				extensions: [
 					{
-						name: "preview",
-						options: {
-							showText: true,
-						},
+						name: "debugger",
 					},
 				],
 			});
 		</script>
 
 		<h3>without addon</h3>
-		<div class="js-color-picker-2">
+		<div class="js-color-picker-3">
 			<input type="text" class="form-control" name="main" required />
 		</div>
 		<script type="text/javascript">
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-2"), {
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-3"), {
 				useAlpha: true,
 				extensions: [
 					{
@@ -59,11 +70,11 @@
 		</script>
 
 		<h3>horizontal</h3>
-		<div class="js-color-picker-3">
+		<div class="js-color-picker-4">
 			<input type="text" class="form-control" name="main" required />
 		</div>
 		<script type="text/javascript">
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-3"), {
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-4"), {
 				useAlpha: true,
 				horizontal: true,
 				extensions: [
@@ -81,11 +92,11 @@
 		</script>
 
 		<h3>swatches</h3>
-		<div class="js-color-picker-4">
+		<div class="js-color-picker-5">
 			<input type="text" class="form-control" name="main" required />
 		</div>
 		<script type="text/javascript">
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-4"), {
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-5"), {
 				useAlpha: true,
 				extensions: [
 					{
@@ -113,11 +124,11 @@
 		</script>
 
 		<h3>inline</h3>
-		<div class="js-color-picker-5">
+		<div class="js-color-picker-6">
 			<input type="text" class="form-control" name="main" required />
 		</div>
 		<script type="text/javascript">
-			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-5"), {
+			new Colorpicker.Colorpicker(document.querySelector(".js-color-picker-6"), {
 				useAlpha: true,
 				inline: true,
 				extensions: [

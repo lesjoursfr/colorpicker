@@ -9,7 +9,8 @@ import { JSDOM, ResourceLoader } from "jsdom";
 // Class to return a window instance.
 // Accepts a jsdom config object.
 class Window {
-  constructor(jsdomConfig = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(jsdomConfig: any = {}) {
     const { proxy, strictSSL, userAgent } = jsdomConfig;
     const resources = new ResourceLoader({
       proxy,
@@ -38,16 +39,16 @@ const defaultJsdomConfig = {
 // IIFE executed on import to return an array of global Node.js properties that
 // conflict with global browser properties.
 const forceOverrideForKeys = ["Event", "CustomEvent"]; // We need to force these overrides to use events in AVA tests
-const protectedproperties = (() =>
-  Object.getOwnPropertyNames(new Window(defaultJsdomConfig))
+const protectedproperties: Array<string> = (() =>
+  (Object.getOwnPropertyNames(new Window(defaultJsdomConfig)) as Array<keyof Window>)
     .filter((prop) => typeof global[prop] !== "undefined")
     .filter((prop) => forceOverrideForKeys.indexOf(prop) === -1))();
 protectedproperties.push("undefined");
 
 // Sets up global browser environment
-const browserEnv = function () {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const browserEnv = function (...args: Array<any>) {
   // Extract options from args
-  const args = Array.from(arguments);
   const properties = args.filter((arg) => Array.isArray(arg))[0];
   const userJsdomConfig = args.filter((arg) => !Array.isArray(arg))[0] || {};
 
@@ -55,7 +56,7 @@ const browserEnv = function () {
   const window = new Window(Object.assign({}, userJsdomConfig, defaultJsdomConfig));
 
   // Get all global browser properties
-  Object.getOwnPropertyNames(window)
+  (Object.getOwnPropertyNames(window) as Array<keyof Window>)
     // Remove protected properties
     .filter((prop) => protectedproperties.indexOf(prop) === -1)
     // If we're only applying specific required properties remove everything else
