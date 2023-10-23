@@ -83,5 +83,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@3.6.4"
+	"packageManager": "yarn@4.0.0"
 }
