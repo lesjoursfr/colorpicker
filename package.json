@@ -54,7 +54,7 @@
 		"@types/color": "^3.0.5",
 		"@types/jsdom": "^21.1.4",
 		"@types/mocha": "^10.0.3",
-		"@types/node": "^20.8.8",
+		"@types/node": "^20.8.9",
 		"@typescript-eslint/eslint-plugin": "^6.9.0",
 		"@typescript-eslint/parser": "^6.9.0",
 		"color": "^4.2.3",
@@ -68,7 +68,7 @@
 		"mocha": "^10.2.0",
 		"postcss": "^8.4.31",
 		"prettier": "^3.0.3",
-		"sass": "^1.69.4",
+		"sass": "^1.69.5",
 		"sass-loader": "^13.3.2",
 		"stylelint": "^15.11.0",
 		"stylelint-config-sass-guidelines": "^10.0.0",
@@ -83,5 +83,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@4.0.0"
+	"packageManager": "yarn@4.0.1"
 }
