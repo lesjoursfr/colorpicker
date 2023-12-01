@@ -35,8 +35,8 @@ export class InputHandler {
     this._input = hasTagName(this._colorpicker.element, "input")
       ? (this._colorpicker.element as HTMLInputElement)
       : this._colorpicker.options.input
-      ? this._colorpicker.element.querySelector<HTMLInputElement>(this._colorpicker.options.input)
-      : null;
+        ? this._colorpicker.element.querySelector<HTMLInputElement>(this._colorpicker.options.input)
+        : null;
 
     this._initValue();
   }

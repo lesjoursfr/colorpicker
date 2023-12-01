@@ -27,8 +27,8 @@ export class ColorHandler {
     return this._colorpicker.options.fallbackColor
       ? this._colorpicker.options.fallbackColor
       : this.color instanceof ColorItem
-      ? this.color
-      : null;
+        ? this.color
+        : null;
   }
 
   /**

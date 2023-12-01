@@ -164,8 +164,8 @@ export class Colorpicker {
       this.options.container === true || this.options.inline === true
         ? this.element
         : this.options.container !== false
-        ? root.document.querySelector<HTMLElement>(this.options.container)!
-        : false;
+          ? root.document.querySelector<HTMLElement>(this.options.container)!
+          : false;
 
     /**
      * @type {InputHandler}
