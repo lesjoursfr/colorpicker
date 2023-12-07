@@ -1,4 +1,5 @@
-import { createFromTemplate, getAttribute, setAttribute, updateCSS, on, ColorpickerEvent } from "../core/index.js";
+import { createFromTemplate, getAttribute, on, setAttribute, updateCSS } from "@lesjoursfr/browser-tools";
+import { ColorpickerEvent } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 import { Palette, PaletteOptions } from "./palette.js";
 

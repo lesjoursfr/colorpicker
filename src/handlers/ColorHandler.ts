@@ -1,4 +1,5 @@
-import { ColorItem, getData, setData } from "../core/index.js";
+import { getData, setData } from "@lesjoursfr/browser-tools";
+import { ColorItem } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 /**

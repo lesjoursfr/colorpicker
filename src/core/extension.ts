@@ -1,5 +1,6 @@
+import { off, on } from "@lesjoursfr/browser-tools";
 import { Colorpicker } from "../index.js";
-import { on, off, ColorpickerEvent } from "./events.js";
+import { ColorpickerEvent } from "./events.js";
 
 /**
  * Colorpicker extension class.

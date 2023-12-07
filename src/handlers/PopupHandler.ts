@@ -1,6 +1,7 @@
+import { addClass, createFromTemplate, getAttribute, hasClass, off, on, removeClass } from "@lesjoursfr/browser-tools";
 import { createPopper } from "@popperjs/core";
-import { getAttribute, hasClass, addClass, removeClass, on, off, createFromTemplate } from "../core/index.js";
 import { DefaultOptions } from "../colorpicker-options.js";
+import {} from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 const defaults = {

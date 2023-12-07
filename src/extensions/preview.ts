@@ -1,4 +1,5 @@
-import { ColorpickerEvent, Extension, createFromTemplate, updateCSS } from "../core/index.js";
+import { createFromTemplate, updateCSS } from "@lesjoursfr/browser-tools";
+import { ColorpickerEvent, Extension } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 export type PreviewOptions = {

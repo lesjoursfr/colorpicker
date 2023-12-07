@@ -1,4 +1,4 @@
-import { updateCSS, off } from "../core/index.js";
+import { off, updateCSS } from "@lesjoursfr/browser-tools";
 import { Colorpicker } from "../index.js";
 
 /**

@@ -48,6 +48,9 @@
 		"color",
 		"picker"
 	],
+	"dependencies": {
+		"@lesjoursfr/browser-tools": "^1.0.2"
+	},
 	"devDependencies": {
 		"@popperjs/core": "^2.11.8",
 		"@tsconfig/next": "^2.0.1",

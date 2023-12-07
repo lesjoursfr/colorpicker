@@ -1,24 +1,15 @@
-import { DefaultOptions, ColorpickerOptions } from "./colorpicker-options.js";
+import { addClass, getData, off, removeClass, setAttribute, setData, trigger } from "@lesjoursfr/browser-tools";
+import { ColorpickerOptions, DefaultOptions } from "./colorpicker-options.js";
+import { ColorItem, ColorpickerEvent, Extension } from "./core/index.js";
 import * as coreExtensions from "./extensions/index.js";
 import {
-  SliderHandler,
-  PopupHandler,
-  InputHandler,
-  ColorHandler,
-  PickerHandler,
   AddonHandler,
+  ColorHandler,
+  InputHandler,
+  PickerHandler,
+  PopupHandler,
+  SliderHandler,
 } from "./handlers/index.js";
-import {
-  ColorItem,
-  Extension,
-  setAttribute,
-  getData,
-  setData,
-  addClass,
-  removeClass,
-  off,
-  trigger,
-} from "./core/index.js";
 
 declare global {
   interface HTMLElement {
@@ -456,6 +447,6 @@ export class Colorpicker {
    * @param  {string|null} value
    */
   public trigger(eventName: string, color: ColorItem | null = null, value: string | null = null): void {
-    trigger(this.element, eventName, this, color || this.color, value || this.getValue());
+    trigger(this.element, new ColorpickerEvent(eventName, this, color || this.color, value || this.getValue()));
   }
 }

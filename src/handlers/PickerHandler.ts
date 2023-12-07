@@ -1,5 +1,6 @@
-import { createFromTemplate, addClass, updateCSS, ColorItem } from "../core/index.js";
+import { addClass, createFromTemplate, updateCSS } from "@lesjoursfr/browser-tools";
 import { ColorpickerOptions } from "../colorpicker-options.js";
+import { ColorItem } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 /**

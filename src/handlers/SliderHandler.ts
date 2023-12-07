@@ -1,10 +1,11 @@
-import { is, offset, on, off, ColorItem, isTouchEvent } from "../core/index.js";
+import { is, isTouchEvent, off, offset, on } from "@lesjoursfr/browser-tools";
 import {
   SlidersAlphaOption,
   SlidersHueOption,
   SlidersOptions,
   SlidersSaturationOption,
 } from "../colorpicker-options.js";
+import { ColorItem } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 type Slider = (SlidersSaturationOption | SlidersHueOption | SlidersAlphaOption) & {

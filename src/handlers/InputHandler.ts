@@ -1,14 +1,5 @@
-import {
-  ColorItem,
-  getAttribute,
-  setAttribute,
-  getData,
-  hasTagName,
-  on,
-  off,
-  trigger,
-  ColorpickerEvent,
-} from "../core/index.js";
+import { getAttribute, getData, hasTagName, off, on, setAttribute, trigger } from "@lesjoursfr/browser-tools";
+import { ColorItem, ColorpickerEvent } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 /**
@@ -129,7 +120,7 @@ export class InputHandler {
      * (Input) Triggered on the input element when a new color is selected.
      * @event Colorpicker#change
      */
-    trigger(this._input, "change", this._colorpicker, this._colorpicker.color, val);
+    trigger(this._input, new ColorpickerEvent("change", this._colorpicker, this._colorpicker.color, val));
   }
 
   /**

@@ -1,4 +1,5 @@
-import { Extension, on, off, trigger, ColorpickerEvent } from "../core/index.js";
+import { off, on, trigger } from "@lesjoursfr/browser-tools";
+import { ColorpickerEvent, Extension } from "../core/index.js";
 import { Colorpicker } from "../index.js";
 
 /**
@@ -46,14 +47,17 @@ export class Debugger extends Extension {
      * @property {{debugger: DebuggerExtension, eventName: String, logArgs: Array, logMessage: String}} debug
      *  The debug info
      */
-    trigger(this._colorpicker.element, "colorpickerDebug", this._colorpicker, null, null, {
-      debug: {
-        debugger: this,
-        eventName: eventName,
-        logArgs: args,
-        logMessage: logMessage,
-      },
-    });
+    trigger(
+      this._colorpicker.element,
+      new ColorpickerEvent("colorpickerDebug", this._colorpicker, null, null, {
+        debug: {
+          debugger: this,
+          eventName: eventName,
+          logArgs: args,
+          logMessage: logMessage,
+        },
+      })
+    );
   }
 
   public resolveColor(color: string, realColor: boolean = true): string | false {
