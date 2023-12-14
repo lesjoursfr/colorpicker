@@ -1,7 +1,7 @@
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { resolve } from "path";
 import * as sass from "sass";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 
 export default {
@@ -28,8 +28,11 @@ export default {
   output: {
     path: resolve("./build"),
     filename: "colorpicker.js",
-    library: "Colorpicker",
-    libraryTarget: "umd",
+    library: {
+      name: "Colorpicker",
+      type: "umd",
+      export: "default",
+    },
   },
   target: "browserslist",
   externals: {

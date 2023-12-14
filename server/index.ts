@@ -1,3 +1,5 @@
+import { Colorpicker } from "../src/index";
+
 import "../src/css/colorpicker.scss";
 
-export * from "../src/index";
+export default Colorpicker;
