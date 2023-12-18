@@ -185,18 +185,19 @@ export class Colorpicker {
 
     this.init();
 
-    // Emit a create event
-    window.addEventListener(
-      "load",
-      () => {
-        /**
-         * (Colorpicker) When the Colorpicker instance has been created and the DOM is ready.
-         * @event Colorpicker#colorpickerCreate
-         */
-        this.trigger("colorpickerCreate");
-      },
-      { once: true }
-    );
+    // Emit a create event when the Colorpicker instance has been created and the DOM is ready
+    // Check if the DOM is already loaded
+    if (window.document.readyState === "complete") {
+      this.trigger("colorpickerCreate");
+    } else {
+      window.addEventListener(
+        "load",
+        () => {
+          this.trigger("colorpickerCreate");
+        },
+        { once: true }
+      );
+    }
 
     // Add the Colorpicker instance to the DOM
     this.element.colorpicker = this;
