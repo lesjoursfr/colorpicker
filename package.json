@@ -1,6 +1,6 @@
 {
 	"name": "@lesjoursfr/colorpicker",
-	"version": "6.1.1",
+	"version": "6.1.2",
 	"description": "Colorpicker is a modular color picker plugin.",
 	"license": "MIT",
 	"repository": "lesjoursfr/colorpicker",
@@ -49,7 +49,7 @@
 		"picker"
 	],
 	"dependencies": {
-		"@lesjoursfr/browser-tools": "^1.0.6"
+		"@lesjoursfr/browser-tools": "^1.1.0"
 	},
 	"devDependencies": {
 		"@popperjs/core": "^2.11.8",
