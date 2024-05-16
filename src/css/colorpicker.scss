@@ -264,7 +264,7 @@ $bar-size-large: ($bar-size-short * $columns) + ($base-margin * ($columns - 1));
 	&.colorpicker-bar-horizontal {
 		float: left;
 		height: $bar-size-large;
-		margin: 0 0 $base-margin 0;
+		margin: 0 0 $base-margin;
 		width: $bar-size-short;
 	}
 }
