@@ -200,7 +200,7 @@ export class ColorItem {
 
     try {
       return QixColor(color, format ?? undefined);
-    } catch (e) {
+    } catch (_err) {
       return null;
     }
   }
