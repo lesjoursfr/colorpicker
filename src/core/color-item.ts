@@ -82,7 +82,7 @@ export class ColorItem {
       return this._color;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     const result = (this._color as unknown as { [key: string]: Function })[fn](...args);
 
     if (!(result instanceof QixColor)) {
@@ -475,12 +475,12 @@ export class ColorItem {
       return this._color.round().string();
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     if ((this._color as unknown as { [key: string]: Function })[format] === undefined) {
       throw new Error(`Unsupported color format: '${format}'`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     const str = (this._color as unknown as { [key: string]: Function })[format]();
 
     return str.round ? str.round().string() : str;
