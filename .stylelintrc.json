@@ -1,5 +1,5 @@
 {
-	"extends": ["stylelint-config-sass-guidelines"],
+	"extends": ["stylelint-config-standard-scss"],
 	"ignoreFiles": [
 		"build/**",
 		"dist/**",
@@ -20,6 +20,8 @@
 				"ignore": ["attribute", "class"]
 			}
 		],
-		"max-nesting-depth": 4
+		"max-nesting-depth": 4,
+		"no-duplicate-selectors": null,
+		"no-descending-specificity": null
 	}
 }

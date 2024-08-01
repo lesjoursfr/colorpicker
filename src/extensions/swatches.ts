@@ -7,9 +7,9 @@ export type SwatchesOptions = PaletteOptions & { barTemplate: string; swatchTemp
 
 const defaults = {
   barTemplate: `<div class="colorpicker-bar colorpicker-swatches">
-                    <div class="colorpicker-swatches--inner"></div>
+                    <div class="colorpicker-swatches-inner"></div>
                 </div>`,
-  swatchTemplate: '<i class="colorpicker-swatch"><i class="colorpicker-swatch--inner"></i></i>',
+  swatchTemplate: '<i class="colorpicker-swatch"><i class="colorpicker-swatch-inner"></i></i>',
 };
 
 /**
@@ -36,11 +36,11 @@ export class Swatches extends Palette<SwatchesOptions> {
 
     this._element = createFromTemplate(this._options.barTemplate);
 
-    const swatchContainer = this._element.querySelector<HTMLElement>(".colorpicker-swatches--inner");
+    const swatchContainer = this._element.querySelector<HTMLElement>(".colorpicker-swatches-inner");
     const isAliased = this._options.namesAsValues === true && !Array.isArray(this.colors);
 
     if (swatchContainer === null) {
-      throw new Error("Missing .colorpicker-swatches--inner element !");
+      throw new Error("Missing .colorpicker-swatches-inner element !");
     }
 
     swatchContainer.replaceChildren();
@@ -56,7 +56,7 @@ export class Swatches extends Palette<SwatchesOptions> {
         );
       }) as EventListener);
 
-      for (const swatchInner of swatch.querySelectorAll<HTMLElement>(".colorpicker-swatch--inner")) {
+      for (const swatchInner of swatch.querySelectorAll<HTMLElement>(".colorpicker-swatch-inner")) {
         updateCSS(swatchInner, "background-color", value);
       }
 
