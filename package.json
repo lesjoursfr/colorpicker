@@ -52,17 +52,17 @@
 		"@lesjoursfr/browser-tools": "^1.1.5"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.12.0",
+		"@eslint/js": "^9.13.0",
 		"@popperjs/core": "^2.11.8",
 		"@tsconfig/next": "^2.0.3",
 		"@types/color": "^3.0.6",
 		"@types/jsdom": "^21.1.7",
 		"@types/mocha": "^10.0.9",
-		"@types/node": "^20.16.12",
+		"@types/node": "^20.16.13",
 		"color": "^4.2.3",
 		"css-loader": "^7.1.2",
 		"css-minimizer-webpack-plugin": "^7.0.0",
-		"eslint": "^9.12.0",
+		"eslint": "^9.13.0",
 		"eslint-config-prettier": "^9.1.0",
 		"fs-extra": "^11.2.0",
 		"globals": "^15.11.0",
@@ -71,7 +71,7 @@
 		"mocha": "^10.7.3",
 		"postcss": "^8.4.47",
 		"prettier": "^3.3.3",
-		"sass": "^1.80.2",
+		"sass": "^1.80.3",
 		"sass-loader": "^16.0.2",
 		"stylelint": "^16.10.0",
 		"stylelint-config-standard-scss": "^13.1.0",
@@ -87,5 +87,5 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@4.5.0"
+	"packageManager": "yarn@4.5.1"
 }
