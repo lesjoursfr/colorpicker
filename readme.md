@@ -9,7 +9,7 @@ Modular color picker
 
 To work this library needs :
 
--   [@popperjs/core](https://www.npmjs.com/package/@popperjs/core) **2.x**
+- [@popperjs/core](https://www.npmjs.com/package/@popperjs/core) **2.x**
 
 ## How to use
 
