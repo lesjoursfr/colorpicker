@@ -58,7 +58,7 @@
 		"@types/color": "^4.2.0",
 		"@types/jsdom": "^21.1.7",
 		"@types/mocha": "^10.0.10",
-		"@types/node": "^22.12.0",
+		"@types/node": "^22.13.0",
 		"color": "^4.2.3",
 		"css-loader": "^7.1.2",
 		"css-minimizer-webpack-plugin": "^7.0.0",
