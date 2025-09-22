@@ -87,5 +87,10 @@
 	"peerDependencies": {
 		"@popperjs/core": "^2.11.8"
 	},
-	"packageManager": "yarn@4.9.4"
+	"dependenciesMeta": {
+		"@parcel/watcher": {
+			"built": true
+		}
+	},
+	"packageManager": "yarn@4.10.2"
 }
