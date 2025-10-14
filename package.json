@@ -56,7 +56,7 @@
 		"@popperjs/core": "^2.11.8",
 		"@tsconfig/next": "^2.0.3",
 		"@types/color": "^4.2.0",
-		"@types/jsdom": "^21.1.7",
+		"@types/jsdom": "^27.0.0",
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^22.18.1",
 		"color": "^4.2.3",
