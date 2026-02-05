@@ -11,27 +11,25 @@ import { JSDOM } from "jsdom";
 class Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(jsdomConfig: any = {}) {
-    const { userAgent, ...otherConfig } = jsdomConfig;
-    
-    // Build resources configuration for jsdom 28+
-    const resourcesConfig: { userAgent?: string } = {};
-    if (userAgent) {
-      resourcesConfig.userAgent = userAgent;
-    }
-    
+    const { userAgent } = jsdomConfig;
     return new JSDOM(
       "",
-      {
-        ...otherConfig,
-        ...(userAgent ? { resources: resourcesConfig } : {})
-      }
+      Object.assign(jsdomConfig, {
+        resources: userAgent ? { userAgent: userAgent } : undefined,
+      })
     ).window;
   }
 }
 
 // Default jsdom config.
-// In jsdom 28+, subresources are not loaded by default, which is the desired behavior
-const defaultJsdomConfig = {};
+// These settings must override any custom settings to make sure we can iterate
+// over the window object.
+const defaultJsdomConfig = {
+  features: {
+    FetchExternalResources: false,
+    ProcessExternalResources: false,
+  },
+};
 
 // IIFE executed on import to return an array of global Node.js properties that
 // conflict with global browser properties.
