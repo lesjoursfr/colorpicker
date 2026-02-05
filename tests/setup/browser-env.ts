@@ -4,37 +4,34 @@
  * - https://github.com/lukechilds/browser-env/blob/master/src/index.js (browserEnv function)
  * - https://github.com/lukechilds/window/blob/master/src/index.js (Window class)
  */
-import { JSDOM, ResourceLoader } from "jsdom";
+import { JSDOM } from "jsdom";
 
 // Class to return a window instance.
 // Accepts a jsdom config object.
 class Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(jsdomConfig: any = {}) {
-    const { proxy, strictSSL, userAgent } = jsdomConfig;
-    const resources = new ResourceLoader({
-      proxy,
-      strictSSL,
-      userAgent,
-    });
+    const { userAgent, ...otherConfig } = jsdomConfig;
+    
+    // Build resources configuration for jsdom 28+
+    const resourcesConfig: { userAgent?: string } = {};
+    if (userAgent) {
+      resourcesConfig.userAgent = userAgent;
+    }
+    
     return new JSDOM(
       "",
-      Object.assign(jsdomConfig, {
-        resources,
-      })
+      {
+        ...otherConfig,
+        ...(Object.keys(resourcesConfig).length > 0 ? { resources: resourcesConfig } : {})
+      }
     ).window;
   }
 }
 
 // Default jsdom config.
-// These settings must override any custom settings to make sure we can iterate
-// over the window object.
-const defaultJsdomConfig = {
-  features: {
-    FetchExternalResources: false,
-    ProcessExternalResources: false,
-  },
-};
+// In jsdom 28+, subresources are not loaded by default, which is the desired behavior
+const defaultJsdomConfig = {};
 
 // IIFE executed on import to return an array of global Node.js properties that
 // conflict with global browser properties.
