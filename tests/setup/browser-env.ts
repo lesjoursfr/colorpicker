@@ -23,7 +23,7 @@ class Window {
       "",
       {
         ...otherConfig,
-        ...(Object.keys(resourcesConfig).length > 0 ? { resources: resourcesConfig } : {})
+        ...(userAgent ? { resources: resourcesConfig } : {})
       }
     ).window;
   }
