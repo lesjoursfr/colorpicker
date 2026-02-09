@@ -584,8 +584,7 @@ export class ColorItem {
    * @returns {ColorItem[]}
    */
   public generate(formula: "complementary" | "triad" | "tetrad" | "splitcomplement" | number[]): ColorItem[] {
-    let hues: number[] = [];
-
+    let hues: number[];
     if (Array.isArray(formula)) {
       hues = formula;
     } else if (!Object.hasOwn(ColorItem.colorFormulas, formula)) {
