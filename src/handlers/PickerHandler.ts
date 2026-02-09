@@ -131,8 +131,7 @@ export class PickerHandler {
     // Set alpha color gradient
     const hexColor = this._color.toHexString();
 
-    let alphaBg = "";
-
+    let alphaBg: string;
     if (this._options.horizontal) {
       alphaBg = `linear-gradient(to right, ${hexColor} 0%, transparent 100%)`;
     } else {
