@@ -114,16 +114,16 @@ export class PopupHandler {
 
     // bind addon show/hide events
     if (this._hasAddon) {
-      on(this._addon, "mousedown.colorpicker touchstart.colorpicker", this.toggle);
+      on(this._addon, "mousedown:colorpicker touchstart:colorpicker", this.toggle);
     }
 
     // bind input show/hide events
     if (this._hasInput && !this._hasAddon) {
-      on(this._input, "mousedown.colorpicker touchstart.colorpicker", this.show);
+      on(this._input, "mousedown:colorpicker touchstart:colorpicker", this.show);
     }
 
     // reposition popup on window resize
-    on(this._root, "resize.colorpicker", this.reposition);
+    on(this._root, "resize:colorpicker", this.reposition);
   }
 
   /**
@@ -131,11 +131,11 @@ export class PopupHandler {
    */
   public unbind(): void {
     if (this._hasInput) {
-      off(this._input, "mousedown.colorpicker touchstart.colorpicker");
+      off(this._input, "mousedown:colorpicker touchstart:colorpicker");
     }
 
     if (this._hasAddon) {
-      off(this._addon, "mousedown.colorpicker touchstart.colorpicker");
+      off(this._addon, "mousedown:colorpicker touchstart:colorpicker");
     }
 
     if (this._popperInstance !== null) {
@@ -146,8 +146,8 @@ export class PopupHandler {
       this._popperInstance = null;
     }
 
-    off(this._root, "resize.colorpicker", this.reposition);
-    off(this._root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+    off(this._root, "resize:colorpicker", this.reposition);
+    off(this._root.document, "mousedown:colorpicker touchstart:colorpicker", this.hide);
   }
 
   public isClickingInside(e: Event): boolean {
@@ -246,7 +246,7 @@ export class PopupHandler {
 
     // If it's a popover, add event to the document to hide the picker when clicking outside of it
     if (this._isPopover) {
-      on(this._root, "resize.colorpicker", this.reposition);
+      on(this._root, "resize:colorpicker", this.reposition);
     }
 
     // add visible class before popover is shown
@@ -268,7 +268,7 @@ export class PopupHandler {
 
     if (this._isPopover) {
       // Add event to hide on outside click
-      on(this._root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+      on(this._root.document, "mousedown:colorpicker touchstart:colorpicker", this.hide);
     }
 
     /**
@@ -327,8 +327,8 @@ export class PopupHandler {
     removeClass(cp.picker, "colorpicker-visible");
 
     // Unbind window and document events, since there is no need to keep them while the popup is hidden
-    off(this._root, "resize.colorpicker", this.reposition);
-    off(this._root.document, "mousedown.colorpicker touchstart.colorpicker", this.hide);
+    off(this._root, "resize:colorpicker", this.reposition);
+    off(this._root.document, "mousedown:colorpicker touchstart:colorpicker", this.hide);
 
     /**
      * (Colorpicker) When hide() is called and the widget can be hidden.     * @event Colorpicker#colorpickerHide

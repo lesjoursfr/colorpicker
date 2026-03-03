@@ -43,15 +43,15 @@ export class InputHandler {
     if (this._input === null) {
       return;
     }
-    on(this._input, "keyup.colorpicker", this.onkeyup as EventListener);
-    on(this._input, "change.colorpicker", this.onchange as EventListener);
+    on(this._input, "keyup:colorpicker", this.onkeyup as EventListener);
+    on(this._input, "change:colorpicker", this.onchange as EventListener);
   }
 
   public unbind(): void {
     if (this._input === null) {
       return;
     }
-    off(this._input, "*.colorpicker");
+    off(this._input, "*:colorpicker");
   }
 
   private _initValue(): void {

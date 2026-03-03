@@ -50,7 +50,7 @@ export class Swatches extends Palette<SwatchesOptions> {
       setAttribute(swatch, "data-name", name);
       setAttribute(swatch, "data-value", value);
       setAttribute(swatch, "title", isAliased ? `${name}: ${value}` : value);
-      on(swatch, "mousedown.colorpicker touchstart.colorpicker", ((e: MouseEvent | TouchEvent) => {
+      on(swatch, "mousedown:colorpicker touchstart:colorpicker", ((e: MouseEvent | TouchEvent) => {
         this._colorpicker.setValue(
           getAttribute(e.currentTarget as HTMLElement, isAliased ? "data-name" : "data-value")!
         );

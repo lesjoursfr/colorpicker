@@ -18,7 +18,7 @@ export class Debugger extends Extension {
     this._eventCounter = 0;
 
     if (this._colorpicker.inputHandler.hasInput()) {
-      on(this._colorpicker.inputHandler.input, "change.colorpicker-ext", this.onChangeInput as EventListener);
+      on(this._colorpicker.inputHandler.input, "change:colorpicker-ext", this.onChangeInput as EventListener);
     }
   }
 
@@ -75,7 +75,7 @@ export class Debugger extends Extension {
     this._eventCounter = 0;
 
     if (this._colorpicker.inputHandler.hasInput()) {
-      off(this._colorpicker.inputHandler.input, "*.colorpicker-ext");
+      off(this._colorpicker.inputHandler.input, "*:colorpicker-ext");
     }
 
     return super.onDestroy(event);
