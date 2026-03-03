@@ -39,15 +39,15 @@ export class Extension<ExtensionOptions = never> {
       throw new Error("Extension: this._colorpicker.element is not valid");
     }
 
-    on(this._colorpicker.element, "colorpickerCreate.colorpicker-ext", this.onCreate as EventListener);
-    on(this._colorpicker.element, "colorpickerDestroy.colorpicker-ext", this.onDestroy as EventListener);
-    on(this._colorpicker.element, "colorpickerUpdate.colorpicker-ext", this.onUpdate as EventListener);
-    on(this._colorpicker.element, "colorpickerChange.colorpicker-ext", this.onChange as EventListener);
-    on(this._colorpicker.element, "colorpickerInvalid.colorpicker-ext", this.onInvalid as EventListener);
-    on(this._colorpicker.element, "colorpickerShow.colorpicker-ext", this.onShow as EventListener);
-    on(this._colorpicker.element, "colorpickerHide.colorpicker-ext", this.onHide as EventListener);
-    on(this._colorpicker.element, "colorpickerEnable.colorpicker-ext", this.onEnable as EventListener);
-    on(this._colorpicker.element, "colorpickerDisable.colorpicker-ext", this.onDisable as EventListener);
+    on(this._colorpicker.element, "colorpickerCreate:colorpicker-ext", this.onCreate as EventListener);
+    on(this._colorpicker.element, "colorpickerDestroy:colorpicker-ext", this.onDestroy as EventListener);
+    on(this._colorpicker.element, "colorpickerUpdate:colorpicker-ext", this.onUpdate as EventListener);
+    on(this._colorpicker.element, "colorpickerChange:colorpicker-ext", this.onChange as EventListener);
+    on(this._colorpicker.element, "colorpickerInvalid:colorpicker-ext", this.onInvalid as EventListener);
+    on(this._colorpicker.element, "colorpickerShow:colorpicker-ext", this.onShow as EventListener);
+    on(this._colorpicker.element, "colorpickerHide:colorpicker-ext", this.onHide as EventListener);
+    on(this._colorpicker.element, "colorpickerEnable:colorpicker-ext", this.onEnable as EventListener);
+    on(this._colorpicker.element, "colorpickerDisable:colorpicker-ext", this.onDisable as EventListener);
   }
 
   /**
@@ -80,7 +80,7 @@ export class Extension<ExtensionOptions = never> {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onDestroy(event: ColorpickerEvent): void {
-    off(this._colorpicker.element, "*.colorpicker-ext");
+    off(this._colorpicker.element, "*:colorpicker-ext");
   }
 
   /**

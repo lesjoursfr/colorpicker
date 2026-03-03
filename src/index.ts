@@ -285,7 +285,7 @@ export class Colorpicker {
     removeClass(this.element, "colorpicker-element");
     setData(this.element, "colorpicker", null);
     setData(this.element, "color", null);
-    off(this.element, "*.colorpicker");
+    off(this.element, "*:colorpicker");
 
     /**
      * (Colorpicker) When the instance is destroyed with all events unbound.

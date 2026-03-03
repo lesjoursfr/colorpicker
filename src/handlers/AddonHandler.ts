@@ -44,7 +44,7 @@ export class AddonHandler {
 
   public unbind(): void {
     if (this._addon !== null) {
-      off(this._addon, "*.colorpicker");
+      off(this._addon, "*:colorpicker");
     }
   }
 

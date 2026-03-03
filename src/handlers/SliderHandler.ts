@@ -108,7 +108,7 @@ export class SliderHandler {
 
     on(
       this._colorpicker.picker.querySelectorAll(sliderClasses.join(", ")),
-      "mousedown.colorpicker touchstart.colorpicker",
+      "mousedown:colorpicker touchstart:colorpicker",
       this.pressed as EventListener
     );
   }
@@ -117,8 +117,8 @@ export class SliderHandler {
    * Unbinds any event bound by this handler
    */
   public unbind(): void {
-    off(this._colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker");
-    off(this._colorpicker.picker, "mouseup.colorpicker touchend.colorpicker");
+    off(this._colorpicker.picker, "mousemove:colorpicker touchmove:colorpicker");
+    off(this._colorpicker.picker, "mouseup:colorpicker touchend:colorpicker");
   }
 
   /**
@@ -201,8 +201,8 @@ export class SliderHandler {
      * so the color adjustment guide is moved to the clicked position.
      * @event Colorpicker#mousemove
      */
-    on(this._colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker", this.moved as EventListener);
-    on(this._root.document, "mouseup.colorpicker touchend.colorpicker", this.released as EventListener);
+    on(this._colorpicker.picker, "mousemove:colorpicker touchmove:colorpicker", this.moved as EventListener);
+    on(this._root.document, "mouseup:colorpicker touchend:colorpicker", this.released as EventListener);
 
     this._colorpicker.picker.dispatchEvent(new MouseEvent("mousemove"));
   }
@@ -255,7 +255,7 @@ export class SliderHandler {
     // e.stopPropagation();
     // e.preventDefault();
 
-    off(this._colorpicker.picker, "mousemove.colorpicker touchmove.colorpicker");
-    off(this._root.document, "mouseup.colorpicker touchend.colorpicker", this.released as EventListener);
+    off(this._colorpicker.picker, "mousemove:colorpicker touchmove:colorpicker");
+    off(this._root.document, "mouseup:colorpicker touchend:colorpicker", this.released as EventListener);
   }
 }
