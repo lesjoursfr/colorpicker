@@ -55,7 +55,6 @@
 		"@eslint/js": "10.0.1",
 		"@popperjs/core": "2.11.8",
 		"@tsconfig/next": "2.0.6",
-		"@types/color": "4.2.1",
 		"@types/jsdom": "28.0.1",
 		"@types/mocha": "10.0.10",
 		"@types/node": "24.12.2",

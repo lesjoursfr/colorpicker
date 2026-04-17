@@ -1,11 +1,11 @@
 /**
  * Color manipulation class, specific for Bootstrap Colorpicker
  */
-import QixColor from "color";
+import QixColorConstructor, { ColorInstance as QixColorInstance } from "color";
 
-type QixColorFormat = Parameters<typeof QixColor>[1];
+type QixColorFormat = Parameters<typeof QixColorConstructor>[1];
 
-type InputColor = ColorItem | HSVAColor | QixColor | Array<number> | string;
+type InputColor = ColorItem | HSVAColor | QixColorInstance | Array<number> | string;
 
 type SupportedColorFormat = "rgb" | "hsl" | "hex";
 
@@ -75,9 +75,9 @@ export class ColorItem {
    * @example let luminosity = color.api('luminosity');
    * @example color = color.api('negate');
    * @example let qColor = color.api().negate();
-   * @returns {ColorItem|QixColor|unknown}
+   * @returns {ColorItem|QixColorInstance|unknown}
    */
-  public api(fn: string, ...args: unknown[]): ColorItem | QixColor | unknown {
+  public api(fn: string, ...args: unknown[]): ColorItem | QixColorInstance | unknown {
     if (arguments.length === 0) {
       return this._color;
     }
@@ -85,7 +85,7 @@ export class ColorItem {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     const result = (this._color as unknown as { [key: string]: Function })[fn](...args);
 
-    if (!(result instanceof QixColor)) {
+    if (!(result instanceof QixColorConstructor)) {
       // return result of the method call
       return result;
     }
@@ -108,9 +108,9 @@ export class ColorItem {
   private _original!: { color: InputColor | null; format: SupportedColorFormat | null; valid: boolean };
 
   /**
-   * @type {QixColor}
+   * @type {QixColorInstance}
    */
-  private _color!: QixColor;
+  private _color!: QixColorInstance;
 
   /**
    * @type {SupportedColorFormat|null}
@@ -150,7 +150,7 @@ export class ColorItem {
 
     color = ColorItem.parse(color, disableHexInputFallback);
     if (color === null) {
-      this._color = QixColor();
+      this._color = new QixColorConstructor();
       this._original.valid = false;
       return;
     }
@@ -158,7 +158,7 @@ export class ColorItem {
 
     this._format =
       (format as ReturnType<typeof ColorItem.sanitizeFormat>) ||
-      (ColorItem.isHex(color) ? "hex" : (this._color as QixColor & { model: SupportedColorFormat }).model);
+      (ColorItem.isHex(color) ? "hex" : (this._color as QixColorInstance & { model: SupportedColorFormat }).model);
   }
 
   /**
@@ -167,10 +167,10 @@ export class ColorItem {
    * @param {InputColor|null} color Color data
    * @param {boolean} disableHexInputFallback Disable fixing hex3 format
    * @example let qColor = ColorItem.parse('rgb(255,0,0)');
-   * @returns {QixColor|null}
+   * @returns {QixColorInstance|null}
    */
-  public static parse(color: InputColor | null, disableHexInputFallback: boolean = false): QixColor | null {
-    if (color instanceof QixColor) {
+  public static parse(color: InputColor | null, disableHexInputFallback: boolean = false): QixColorInstance | null {
+    if (color instanceof QixColorConstructor) {
       return color;
     }
 
@@ -199,7 +199,7 @@ export class ColorItem {
     }
 
     try {
-      return QixColor(color, format ?? undefined);
+      return new QixColorConstructor(color, format ?? undefined);
     } catch (_err) {
       return null;
     }
@@ -321,7 +321,7 @@ export class ColorItem {
    * @returns {SupportedColorFormat|null}
    */
   public get format(): SupportedColorFormat | null {
-    return this._format ? this._format : (this._color as QixColor & { model: SupportedColorFormat }).model;
+    return this._format ? this._format : (this._color as QixColorInstance & { model: SupportedColorFormat }).model;
   }
 
   /**
