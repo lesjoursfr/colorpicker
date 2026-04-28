@@ -66,6 +66,4 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        env:
-          NODE_OPTIONS: --loader=ts-node/esm
-        run: npx mocha
+        run: npm run test
