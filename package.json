@@ -50,7 +50,7 @@
 		"@tsconfig/next": "2.0.6",
 		"@types/jsdom": "28.0.3",
 		"@types/mocha": "10.0.10",
-		"@types/node": "24.12.4",
+		"@types/node": "24.13.0",
 		"@types/webpack-env": "1.18.8",
 		"color": "5.0.3",
 		"css-loader": "7.1.4",
@@ -72,7 +72,7 @@
 		"ts-loader": "9.6.0",
 		"ts-node": "10.9.2",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.60.0",
+		"typescript-eslint": "8.60.1",
 		"webpack": "5.107.2",
 		"webpack-cli": "7.0.3",
 		"webpack-dev-server": "5.2.4"
@@ -85,5 +85,5 @@
 			"built": true
 		}
 	},
-	"packageManager": "yarn@4.15.0"
+	"packageManager": "yarn@4.16.0"
 }
